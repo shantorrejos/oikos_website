@@ -1,0 +1,25 @@
+// app global css in SCSS form
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Roboto:wght@100;300;400;500;700;900&display=swap");
+
+* {
+  font-family: "Roboto", sans-serif;
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.q-tab__label {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+#projectsIndex .q-carousel__control.q-carousel__navigation {
+  right: 70px !important;
+}
+
+#articlesIndex .q-carousel__control.q-carousel__navigation {
+  right: 70px !important;
+}
+
+#announcementIndex .q-carousel__control.q-carousel__navigation {
+  right: 850px !important;
+}
