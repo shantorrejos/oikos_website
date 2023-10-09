@@ -10,7 +10,7 @@ const { articles } = useOikosArticles();
 // for projects
 for (let i = 0; i < 10; i++) {
   projects[i] = {
-    name: faker.lorem.words(),
+    name: faker.lorem.words(2),
     photo: faker.image.urlPicsumPhotos(),
     description: faker.lorem.paragraph(),
     tags: Array(5)
