@@ -13,15 +13,10 @@
       >
         <!-- Place holder, code javascript later -->
         <q-carousel-slide
-          class="carousel-slide"
-          :name="1"
-          img-src="https://cdn.quasar.dev/img/mountains.jpg"
-        />
-
-        <q-carousel-slide
-          class="carousel-slide"
-          :name="2"
-          img-src="https://cdn.quasar.dev/img/parallax1.jpg"
+          v-for="(project, i) in projects"
+          :key="project.name"
+          :name="i"
+          :img-src="project.photo"
         />
       </q-carousel>
       <p
@@ -44,7 +39,12 @@
       class="w-[1000px] h-fit mx-auto p-0 my-9"
       id="announcementIndex"
     >
-      <q-carousel-slide :name="1" class="p-0 w-[250px] h-[150px]">
+      <q-carousel-slide
+        class="p-0 w-[250px] h-[150px]"
+        v-for="(announcement, i) in announcements"
+        :key="announcement.type"
+        :name="i"
+      >
         <div class="max-w-fit">
           <p class="font-semibold text-element-purple text-[24px] my-[20px]">
             ANNOUNCEMENTS
@@ -53,17 +53,15 @@
         <q-card light bordered class="bg-white mb-[60px] rounded-3xl relative">
           <p class="absolute top-2 right-4 text-element-purple">TODAY</p>
           <q-card-section class="p-80px">
-            <div class="text-h6 m-3 text-element-purple">
-              Our Changing Planet asdhas asg saha sdbhj asdbhja
-              sdbhjsdaaaaaaaaaaaaaasdadfw gerh rjkjg khg
+            <div class="text-h6 m-3 text-element-purple font-bold">
+              {{ announcement.type }}
+              <span class="text-h6 m-3 text-element-purple font-thin">
+                {{ announcement.content }}
+              </span>
             </div>
           </q-card-section>
         </q-card></q-carousel-slide
       >
-      <q-carousel-slide
-        :name="2"
-        img-src="https://cdn.quasar.dev/img/parallax1.jpg"
-      />
 
       <template v-slot:control>
         <q-carousel-control
@@ -98,7 +96,7 @@
 
       <!-- engage photo -->
 
-      <img src="../assets/omegalol.jpg" class="relative h-[400px] w-auto" />
+      <img v-bind:src="engage.photo" class="relative h-[400px] w-auto" />
 
       <div class="max-w-[400px]">
         <div align="center" class="flex flex-col items-center">
@@ -473,15 +471,25 @@
 <script>
 import { QBtn } from "quasar";
 import { ref } from "vue";
+import useOikosProjects from "src/composables/useOikosProjects";
+import useOikosAnnouncements from "src/composables/useOikosAnnouncements";
+import useEngage from "src/composables/useEngage";
 
 export default {
   setup() {
+    const { projects } = useOikosProjects();
+    const { announcements } = useOikosAnnouncements();
+    const { engage } = useEngage();
+
     return {
       slideMain: ref(1),
       slideAnnouceMain: ref(1),
       slideAnnouncement: ref(1),
       slideProject: ref(1),
       slideArticles: ref(1),
+      projects,
+      announcements,
+      engage,
     };
   },
   components: { QBtn },
