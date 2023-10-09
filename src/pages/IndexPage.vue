@@ -147,32 +147,21 @@
         id="projectsIne"
       >
         <!-- Place holder, code javascript later -->
-        <q-carousel-slide :name="1" class="p-0">
-          <div class="h-[370px]">
-            <img
-              src="https://cdn.quasar.dev/img/mountains.jpg"
-              class="object-cover w-full h-full"
-            />
-          </div>
-        </q-carousel-slide>
         <q-carousel-slide
-          class="carousel-slide featured"
-          :name="2"
-          img-src="https://cdn.quasar.dev/img/parallax1.jpg"
+          v-for="(featuredPhoto, i) in featuredBanner.photo"
+          :key="featuredPhoto"
+          :name="i"
+          :img-src="featuredPhoto"
         />
-
-        /q-carousel-slide>
       </q-carousel>
 
       <!-- textoverlay for announcement -->
       <div class="absolute w-[417px] top-5 left-10">
-        <p class="text-[45px] text-left font-bold text-white">
-          WANTED: MEDICAL VOLUNTEERS
+        <p class="text-[45px] text-left font-bold text-white uppercase">
+          {{ featuredBanner.title }}
         </p>
         <p class="text-[20px] text-white text-left font-thin">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-          tempor leo ut tellus luctus sollicitudin. Etiam viverra leo id diam
-          sodales, ut molestie nisi varius.
+          {{ featuredBanner.content }}
         </p>
         <div class="flex gap-[20px] my-3">
           <q-btn
@@ -214,24 +203,27 @@
         id="projectsIndex"
       >
         <!-- Place holder, code javascript later -->
-        <q-carousel-slide :name="1" style="padding: 0">
+        <q-carousel-slide
+          class="p-0"
+          v-for="(featuredProject, i) in featuredProjects"
+          :key="featuredProject.name"
+          :name="i"
+        >
           <div class="flex justify-between p-0">
             <q-img
-              style="flex: 1; max-height: 330px; max-width: 600px"
-              src="https://cdn.quasar.dev/img/mountains.jpg"
+              class="flex-1 max-h-[330px] max-w-[600px]"
+              v-bind:src="featuredProject.photo"
             ></q-img>
 
             <div class="flex text-left w-[550px] flex-col justify-center">
               <!-- code this cunt -->
               <p
-                class="text-[50px] font-bold text-element-b39pink leading-none w-[400px] uppercase"
+                class="text-[50px] font-bold text-element-b39pink leading-none w-[400px] uppercase mb-[20px]"
               >
-                project kahaslag
+                {{ featuredProject.name }}
               </p>
-              <p class="text-[22px] font-thin text-element-24black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Curabitur tempor leo ut tellus luctus sollicitudin. Etiam
-                viverra leo id diam sodales, ut molestie nisi varius.
+              <p class="text-[22px] font-thin text-element-24black mb-[20px]">
+                {{ featuredProject.description }}
               </p>
 
               <div style="display: flex; gap: 30px; margin-top: 10px">
@@ -247,51 +239,6 @@
                   class="bg-element-purpink text-white font-bold text-[14px] px-12 w-50"
                   >More Projects</q-btn
                 >
-              </div>
-            </div>
-          </div>
-        </q-carousel-slide>
-
-        <q-carousel-slide :name="2" style="padding: 0">
-          <div
-            style="display: flex; justify-content: space-between; padding: 0"
-          >
-            <q-img
-              style="flex: 1; max-height: 350px; max-width: 600px"
-              src="https://cdn.quasar.dev/img/parallax1.jpg"
-            ></q-img>
-
-            <div
-              style="
-                display: flex;
-                text-align: left;
-                width: 550px;
-                flex-direction: column;
-                justify-content: center;
-              "
-            >
-              <!-- code this cunt -->
-              <p
-                style="
-                  font-size: 50px;
-                  font-weight: 700;
-                  color: #b393ab;
-                  line-height: 1;
-                  width: 300px;
-                  text-transform: uppercase;
-                "
-              >
-                asdadasds kahaslag
-              </p>
-              <p style="font-size: 20px; font-weight: 200; color: #2f2f2f">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Curabitur tempor leo ut tellus luctus sollicitudin. Etiam
-                viverra leo id diam sodales, ut molestie nisi varius.
-              </p>
-
-              <div style="display: flex; flex-direction: column">
-                <QBtn class="button featured-project">View More</QBtn>
-                <QBtn class="button featured-project">More Projects</QBtn>
               </div>
             </div>
           </div>
@@ -338,11 +285,7 @@
     </div>
 
     <!-- articles carousel // change this for javascript-->
-    <div
-      align="center"
-      class="carousel-container"
-      style="position: relative; margin: 0; padding: 0"
-    >
+    <div align="center" class="relative m-0 p-0">
       <q-carousel
         control="false"
         animated
@@ -355,11 +298,16 @@
         id="articlesIndex"
       >
         <!-- Place holder, code javascript later -->
-        <q-carousel-slide :name="1" style="padding: 0">
+        <q-carousel-slide
+          class="p-0"
+          v-for="(featuredArticle, i) in featuredArticles"
+          :key="featuredArticle.title"
+          :name="i"
+        >
           <div class="flex justify-between p-0">
             <q-img
-              style="flex: 1; max-height: 330px; max-width: 600px"
-              src="https://cdn.quasar.dev/img/parallax1.jpg"
+              class="flex-1 max-h-[330px] max-w-[600px]"
+              v-bind:src="featuredArticle.photo"
             ></q-img>
 
             <div class="flex text-left w-[550px] flex-col justify-center">
@@ -367,12 +315,10 @@
               <p
                 class="text-[50px] font-bold text-element-b39pink leading-none w-[400px] uppercase"
               >
-                The spark of a new change
+                {{ featuredArticle.title }}
               </p>
               <p class="text-[22px] font-thin text-element-24black">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Curabitur tempor leo ut tellus luctus sollicitudin. Etiam
-                viverra leo id diam sodales, ut molestie nisi varius.
+                {{ featuredArticle.description }}
               </p>
 
               <div style="display: flex; gap: 30px; margin-top: 10px">
@@ -393,50 +339,6 @@
           </div>
         </q-carousel-slide>
 
-        <q-carousel-slide :name="2" style="padding: 0">
-          <div
-            style="display: flex; justify-content: space-between; padding: 0"
-          >
-            <q-img
-              style="flex: 1; max-height: 350px; max-width: 600px"
-              src="https://cdn.quasar.dev/img/parallax1.jpg"
-            ></q-img>
-
-            <div
-              style="
-                display: flex;
-                text-align: left;
-                width: 550px;
-                flex-direction: column;
-                justify-content: center;
-              "
-            >
-              <!-- code this cunt -->
-              <p
-                style="
-                  font-size: 50px;
-                  font-weight: 700;
-                  color: #b393ab;
-                  line-height: 1;
-                  width: 300px;
-                  text-transform: uppercase;
-                "
-              >
-                asdadasds kahaslag
-              </p>
-              <p style="font-size: 20px; font-weight: 200; color: #2f2f2f">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Curabitur tempor leo ut tellus luctus sollicitudin. Etiam
-                viverra leo id diam sodales, ut molestie nisi varius.
-              </p>
-
-              <div style="display: flex; flex-direction: column">
-                <QBtn class="button featured-project">View More</QBtn>
-                <QBtn class="button featured-project">More Projects</QBtn>
-              </div>
-            </div>
-          </div>
-        </q-carousel-slide>
         <template v-slot:control>
           <q-carousel-control
             position="bottom-left"
@@ -474,22 +376,29 @@ import { ref } from "vue";
 import useOikosProjects from "src/composables/useOikosProjects";
 import useOikosAnnouncements from "src/composables/useOikosAnnouncements";
 import useEngage from "src/composables/useEngage";
+import useFeatured from "src/composables/useFeatured";
 
 export default {
   setup() {
     const { projects } = useOikosProjects();
     const { announcements } = useOikosAnnouncements();
     const { engage } = useEngage();
+    const { featuredBanner } = useFeatured();
+    const { featuredProjects } = useFeatured();
+    const { featuredArticles } = useFeatured();
 
     return {
-      slideMain: ref(1),
-      slideAnnouceMain: ref(1),
-      slideAnnouncement: ref(1),
-      slideProject: ref(1),
-      slideArticles: ref(1),
+      slideMain: ref(0),
+      slideAnnouceMain: ref(0),
+      slideAnnouncement: ref(0),
+      slideProject: ref(0),
+      slideArticles: ref(0),
       projects,
       announcements,
       engage,
+      featuredBanner,
+      featuredProjects,
+      featuredArticles,
     };
   },
   components: { QBtn },
