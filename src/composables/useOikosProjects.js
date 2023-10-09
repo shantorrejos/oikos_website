@@ -1,12 +1,16 @@
 import { faker } from "@faker-js/faker";
+import useOikosUsers from "./useOikosUsers";
+import useOikosArticles from "./useOikosArticles";
 
 const projects = [];
-const articles = [];
-const users = [];
+
+const { users } = useOikosUsers();
+const { articles } = useOikosArticles();
 
 // for projects
 for (let i = 0; i < 10; i++) {
   projects[i] = {
+    name: faker.lorem.words(),
     photo: faker.image.urlPicsumPhotos(),
     description: faker.lorem.paragraph(),
     tags: Array(5)
@@ -22,30 +26,17 @@ for (let i = 0; i < 10; i++) {
     projectManagers: Array(5)
       .fill()
       .map(() => faker.person.fullName()),
-    volunteers: [],
-    updates: [],
+    volunteers: Array(20)
+      .fill()
+      .map(() => users[Math.random() * users.length - 1]),
+    updates: Array(8)
+      .fill()
+      .map(() => faker.lorem.sentence),
   };
 }
 
-// for articles
-for (let i = 0; i < 10; i++) {
-  articles[i] = {
-    title: faker.lorem.words(),
-    photo: faker.image.urlLoremFlickr(),
-    content: faker.lorem.paragraphs(),
+export default () => {
+  return {
+    projects,
   };
-}
-
-// for users
-for (let i = 0; i < 20; i++) {
-  users[i] = {
-    displayName: faker.internet.displayName(),
-    username: faker.internet.userName(),
-    birthday: faker.date.birthdate(),
-    location: `${faker.location.buildingNumber()} ${faker.location.city()} ${faker.location.country()}`,
-    gender: { sex: faker.person.sex(), pronouns: faker.person.prefix() },
-    contact: { email: faker.internet.email(), phoneNumber: faker.phone.number },
-  };
-}
-
-export default () => {};
+};
