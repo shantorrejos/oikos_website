@@ -32,6 +32,10 @@ for (let i = 0; i < 10; i++) {
     updates: Array(8)
       .fill()
       .map(() => faker.lorem.sentence),
+    // donation: {
+    //   donationCurrent: faker.commerce.price(),
+    //   donationGoal: faker.commerce.price({ min: donationCurrent }),
+    // },
   };
 }
 
