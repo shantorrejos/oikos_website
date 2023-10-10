@@ -1,6 +1,6 @@
 <template>
   <!-- container for the top thing might be unnecessary-->
-  <div class="mb-[80px]">
+  <div class="mb-[60px]">
     <img
       src="../assets/omegalol.jpg"
       class="w-[100vw] max-h-[550px] object-cover"
@@ -16,33 +16,45 @@
         />
 
         <div class="flex w-[1000px] mx-auto">
-          <div class="text-[70px] text-element-purple">36%</div>
+          <div class="text-[40px] text-element-purple">36%</div>
           <div
-            class="flex flex-col leading-none mt-[22px] ml-[20px] text-element-purpink"
+            class="flex flex-col leading-none mt-[12px] ml-[10px] text-element-purpink"
           >
-            <p class="text-[25px] font-thin">PROJECT GOAL</p>
-            <p class="text-[35px] font-thin">PROGRESS</p>
+            <p class="text-[15px]">PROJECT GOAL</p>
+            <p class="text-[20px]">PROGRESS</p>
           </div>
         </div>
       </div>
 
+      <!-- card here -->
       <q-card
         light
         bordered
-        class="bg-white-700 h-[350px] w-[40vw] rounded-l-[80px] flex flex-col p-[80px] py-[50px]"
+        class="bg-white-700 h-[350px] w-[40vw] rounded-l-[80px] flex flex-col px-[80px]"
       >
-        <p
-          class="font-bold text-[50px] w-[300px] leading-none text-element-purple"
-        >
-          INNER TEXT PLACE
-        </p>
-        <p class="font-light text-[16px] text-element-purpink">
-          tags, placeholder, qwerty lorem
-        </p>
-        <p class="mt-[20px] font-light text-[18px]">
-          description lmao xd asiha fu e bfusad oqd biyuro gqsud fsd gfosi
-          aziufyfsdfwy
-        </p>
+        <div class="my-auto">
+          <p
+            class="font-bold text-[50px] w-[300px] leading-none text-element-purple"
+          >
+            INNER TEXT PLACE
+          </p>
+          <p class="font-light text-[16px] text-element-purpink">
+            tags, placeholder, qwerty lorem
+          </p>
+          <p class="mt-[20px] font-light text-[18px]">
+            description lmao xd asiha fu e bfusad oqd biyuro gqsud fsd gfosi
+            aziufyfsdfwy
+          </p>
+          <div class="mt-[20px] flex justify-between items-center">
+            <p class="text-slate-300">icons here</p>
+            <q-btn
+              flat
+              rounded
+              class="bg-element-purpink text-white font-bold text-[14px] px-12 w-50 ml-auto"
+              >View More</q-btn
+            >
+          </div>
+        </div>
       </q-card>
     </div>
   </div>
@@ -99,7 +111,7 @@
       >
     </div>
 
-    <!-- PROGRESS -->
+    <!-- Progress -->
     <div class="flex items-center gap-5 my-[10px]">
       <p class="text-[20px] text-element-b39pink font-bold mr-[15px]">
         PROGRESS
@@ -119,14 +131,68 @@
         >Ongoing</q-btn
       >
     </div>
+
+    <!-- Actual Project this time -->
+    <div
+      class="flex flex-col overflow-x-auto h-[630px] my-[50px] gap-y-14 gap-x-28"
+    >
+      <!-- project instance -->
+
+      <q-card
+        light
+        bordered
+        class="bg-white-700 h-[270px] w-[740px] rounded-bl-[20px] flex border-b-0 border-l-0"
+        v-for="(project, i) in projects"
+        :key="project.name"
+        :name="i"
+      >
+        <!-- this is a photo -->
+        <div class="h-full">
+          <img
+            v-bind:src="project.photo"
+            class="h-full w-[300px] rounded-bl-[20px] object-cover"
+          />
+        </div>
+
+        <div class="w-[350px] mx-[40px] my-auto">
+          <p
+            class="font-bold text-[30px] w-[300px] leading-none text-element-purple uppercase"
+          >
+            {{ project.name }}
+          </p>
+          <p class="font-light text-[16px] text-element-purpink">
+            tags, placeholder, qwerty lorem
+          </p>
+          <p class="mt-[20px] font-light text-[18px]">
+            {{ project.description }}
+          </p>
+          <div class="mt-[20px] flex justify-between items-center">
+            <p class="text-slate-300">icons here</p>
+            <q-btn
+              flat
+              rounded
+              class="bg-element-purpink text-white font-bold text-[14px] px-12 w-50 ml-auto"
+              >View More</q-btn
+            >
+          </div>
+        </div>
+      </q-card>
+    </div>
   </div>
+
+  <!-- container for the articles -->
+  <div></div>
 </template>
 
 <script>
+import useOikosProjects from "src/composables/useOikosProjects";
+
 export default {
   setup() {
+    const { projects } = useOikosProjects();
     return {
       progress1: 0.4,
+      projects,
     };
   },
 };
