@@ -12,10 +12,14 @@
 
         <!-- styles are overriden in app.scss -->
         <q-tabs align="left" class="text-element-purple">
-          <q-route-tab to="/projects" label="Projects" class="mx-8" />
-          <q-route-tab to="/page2" label="Community" class="mx-8" />
-          <q-route-tab to="/page3" label="Donate" class="mx-8" />
-          <q-route-tab to="/page4" label="Volunteer" class="mx-8" />
+          <q-route-tab
+            to="/projects"
+            label="Projects"
+            class="mx-8 capitalize"
+          />
+          <q-route-tab to="/page2" label="Community" class="mx-8 capitalize" />
+          <q-route-tab to="/page3" label="Donate" class="mx-8 capitalize" />
+          <q-route-tab to="/page4" label="Volunteer" class="mx-8 capitalize" />
         </q-tabs>
       </div>
 
