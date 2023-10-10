@@ -8,7 +8,7 @@
         arrows
         navigation
         infinite
-        autoplay="2000"
+        :autoplay="3000"
         class="p-0 max-w-full h-[700px]"
       >
         <!-- Place holder, code javascript later -->
@@ -33,7 +33,6 @@
       navigation-position="bottom"
       control-color="primary"
       v-model="slideAnnouceMain"
-      :autoplay="autoplay"
       ref="announcementCarousel"
       infinite
       class="w-[1000px] h-fit mx-auto p-0 my-9"
@@ -142,7 +141,7 @@
         v-model="slideAnnouncement"
         infinite
         control-color="primary"
-        autoplay="3000"
+        :autoplay="3000"
         class="relative p-0 w-[1200px] h-[370px] mb-16"
         id="projectsIne"
       >
