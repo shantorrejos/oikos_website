@@ -20,7 +20,7 @@
         />
       </q-carousel>
       <p
-        class="absolute bottom-10 right-10 text-white p-4 text-right font-bold text-header"
+        class="absolute bottom-20 right-10 text-white p-4 text-right font-bold text-header leading-none"
       >
         BIG INITIATIVES FOR<br />
         SMALL COMMUNITIES
@@ -312,11 +312,11 @@
             <div class="flex text-left w-[550px] flex-col justify-center">
               <!-- code this cunt -->
               <p
-                class="text-[50px] font-bold text-element-b39pink leading-none w-[400px] uppercase"
+                class="text-[50px] font-bold text-element-b39pink leading-none w-[400px] uppercase mb-[20px]"
               >
                 {{ featuredArticle.title }}
               </p>
-              <p class="text-[22px] font-thin text-element-24black">
+              <p class="text-[22px] font-thin text-element-24black mb-[20px]">
                 {{ featuredArticle.description }}
               </p>
 
@@ -326,12 +326,6 @@
                   rounded
                   class="bg-element-purpink text-white font-bold text-[14px] px-12 w-50"
                   >View More</q-btn
-                >
-                <q-btn
-                  flat
-                  rounded
-                  class="bg-element-purpink text-white font-bold text-[14px] px-12 w-50"
-                  >More Projects</q-btn
                 >
               </div>
             </div>
