@@ -2,7 +2,9 @@
   <q-layout view="hHh lpR fff">
     <q-header class="flex justify-between bg-white text-black" height-hint="98">
       <div class="flex p-4">
-        <img src="../assets/qweqw.png" width="170" class="ml-4" />
+        <a @click="$router.push('/')" class="cursor-pointer">
+          <img src="../assets/qweqw.png" width="170" class="ml-4" />
+        </a>
 
         <div
           class="h-auto w-1 rounded bg-element-purple text-center mx-16"
