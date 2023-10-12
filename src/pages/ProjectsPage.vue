@@ -150,6 +150,8 @@
         PROGRESS
       </p>
       <q-btn
+        @click="toggleButton('completed')"
+        :active="selectedButton === 'completed'"
         outline
         rounded
         color="primary"
@@ -157,6 +159,8 @@
         >Completed</q-btn
       >
       <q-btn
+        @click="toggleButton('ongoing')"
+        :active="selectedButton === 'ongoing'"
         outline
         rounded
         color="primary"
@@ -266,6 +270,7 @@ export default {
     const { current } = useCycleEvents();
 
     const selectedTags = ref([]);
+    const selectedButton = ref(null);
 
     function toggleTag(tag) {
       if (selectedTags.value.includes(tag)) {
@@ -275,6 +280,15 @@ export default {
         }
       } else {
         selectedTags.value.push(tag); // Add the tag
+      }
+    }
+
+    // assign status value
+    function toggleButton(button) {
+      if (selectedButton.value === button) {
+        selectedButton.value = null; // Deselect the current button
+      } else {
+        selectedButton.value = button; // Select the clicked button
       }
     }
 
@@ -295,6 +309,8 @@ export default {
       filteredProjects,
       selectedTags,
       toggleTag,
+      toggleButton,
+      selectedButton,
     };
   },
 };
