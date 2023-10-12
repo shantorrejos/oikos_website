@@ -152,19 +152,29 @@
       <q-btn
         @click="toggleButton('completed')"
         :active="selectedButton === 'completed'"
-        outline
+        flat
         rounded
         color="primary"
-        class="w-[150px] text-[15px] capitalize"
+        class="w-[150px] text-[15px] capitalize ring-1 ring-element-purple"
+        v-bind:class="
+          selectedButton === 'completed'
+            ? 'bg-element-purple text-white'
+            : 'bg-white text-element-purple'
+        "
         >Completed</q-btn
       >
       <q-btn
         @click="toggleButton('ongoing')"
         :active="selectedButton === 'ongoing'"
-        outline
+        flat
         rounded
         color="primary"
-        class="w-[150px] text-[15px] capitalize"
+        class="w-[150px] text-[15px] capitalize ring-1 ring-element-purple"
+        v-bind:class="
+          selectedButton === 'ongoing'
+            ? 'bg-element-purple text-white'
+            : 'bg-white text-element-purple'
+        "
         >Ongoing</q-btn
       >
     </div>
@@ -198,7 +208,8 @@
             {{ project.name }}
           </p>
           <p class="font-light text-[16px] text-element-purpink">
-            {{ project.tags.join(", ") }}
+            {{ project.tags.join(", ") }} <br />
+            {{ project.status }}
           </p>
           <p class="mt-[20px] font-light text-[18px]">
             {{ project.description }}
@@ -270,7 +281,7 @@ export default {
     const { current } = useCycleEvents();
 
     const selectedTags = ref([]);
-    const selectedButton = ref(null);
+    const selectedButton = ref("noChoice");
 
     function toggleTag(tag) {
       if (selectedTags.value.includes(tag)) {
@@ -286,19 +297,25 @@ export default {
     // assign status value
     function toggleButton(button) {
       if (selectedButton.value === button) {
-        selectedButton.value = null; // Deselect the current button
+        selectedButton.value = "noChoice"; // Deselect the current button
       } else {
         selectedButton.value = button; // Select the clicked button
       }
     }
 
     const filteredProjects = computed(() => {
-      if (selectedTags.value.length === 0) {
-        return projects;
+      if (
+        selectedTags.value.length === 0 &&
+        selectedButton.value === "noChoice"
+      ) {
+        return projects; // Return the entire projects array when no tags and no choice for status are selected
       } else {
-        return projects.filter(function (project) {
-          return project.tags.some((tag) => selectedTags.value.includes(tag));
-        });
+        return projects.filter(
+          (project) =>
+            project.tags.some((tag) => selectedTags.value.includes(tag)) &&
+            (selectedButton.value === "noChoice" ||
+              project.status === selectedButton.value)
+        );
       }
     });
 
