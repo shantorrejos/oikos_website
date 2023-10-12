@@ -44,7 +44,7 @@
     </q-page-container>
 
     <q-footer class="bg-white text-white">
-      <div class="bg-element-purple w-[80vw] h-[2px] mx-auto"></div>
+      <div class="bg-element-purple w-[100vw] h-[2px] mx-auto"></div>
       <div class="flex justify-center m-14">
         <!-- image and copyright -->
         <div class="flex flex-col justify-center">

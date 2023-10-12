@@ -16,6 +16,10 @@ for (let i = 0; i < 3; i++) {
     name: faker.lorem.words(2),
     description: faker.lorem.paragraph(),
     photo: faker.image.urlPicsumPhotos(),
+    tags: Array(faker.number.int({ min: 2, max: 4 }))
+      .fill()
+      .map(() => faker.helpers.arrayElement(["Agriculture", "Education"])),
+    progress: faker.number.float({ precision: 0.01 }),
   };
 }
 

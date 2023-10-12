@@ -1,22 +1,21 @@
 <template>
   <!-- container for the top thing might be unnecessary-->
   <div class="mb-[60px]">
-    <img
-      src="../assets/omegalol.jpg"
-      class="w-[100vw] max-h-[550px] object-cover"
-    />
-    <div class="flex items-end mt-[-170px]">
+    <img :src="current.photo" class="w-[100vw] max-h-[550px] object-cover" />
+    <div class="flex items-end mt-[-170px] flex-nowrap gap-">
       <!-- Progress bar -->
       <div class="bg-white-600 h-[180px] w-[60vw]">
         <q-linear-progress
           size="16px"
-          :value="progress1"
+          :value="current.progress"
           color="secondary"
           class="mt-[35px] w-[1000px] rounded-[100px] mx-auto"
         />
 
         <div class="flex w-[1000px] mx-auto">
-          <div class="text-[40px] text-element-purple">36%</div>
+          <div class="text-[40px] text-element-purple">
+            {{ (current.progress * 100).toFixed(0) }}%
+          </div>
           <div
             class="flex flex-col leading-none mt-[12px] ml-[10px] text-element-purpink"
           >
@@ -34,16 +33,15 @@
       >
         <div class="my-auto">
           <p
-            class="font-bold text-[50px] w-[300px] leading-none text-element-purple"
+            class="font-bold text-[50px] w-[300px] leading-none text-element-purple capitalize"
           >
-            INNER TEXT PLACE
+            {{ current.name }}
           </p>
           <p class="font-light text-[16px] text-element-purpink">
-            tags, placeholder, qwerty lorem
+            {{ current.tags.join(", ") }}
           </p>
           <p class="mt-[20px] font-light text-[18px]">
-            description lmao xd asiha fu e bfusad oqd biyuro gqsud fsd gfosi
-            aziufyfsdfwy
+            {{ current.description }}
           </p>
           <div class="mt-[20px] flex justify-between items-center">
             <p class="text-slate-300">icons here</p>
@@ -60,7 +58,7 @@
   </div>
 
   <!-- container for the projects thing might-->
-  <div class="mx-auto w-[1600px] mb-32">
+  <div class="mx-auto w-[1600px] mb-22">
     <p class="font-bold text-[20px] text-element-purple">PROJECTS</p>
     <div class="bg-element-purple h-[3px] w-[100%] my-[20px]"></div>
 
@@ -68,6 +66,7 @@
     <div class="flex items-center gap-5 my-[10px]">
       <p class="text-[20px] text-element-b39pink font-bold">CATEGORIES</p>
       <q-btn
+        @click="toggleTag('Agriculture')"
         outline
         rounded
         color="primary"
@@ -181,18 +180,61 @@
   </div>
 
   <!-- container for the articles -->
-  <div></div>
+  <div class="mx-auto w-[1600px] mb-22">
+    <p class="font-bold text-[20px] text-element-purple">ARTICLES</p>
+    <div class="bg-element-purple h-[3px] w-[100%] my-[20px]"></div>
+
+    <div
+      class="flex flex-col overflow-x-auto h-[500px] my-[50px] gap-y-14 gap-x-10 p-[4px]"
+    >
+      <q-card
+        light
+        bordered
+        class="bg-white-700 h-[475px] w-[285px] rounded-[30px] flex relative"
+        v-for="(article, i) in articles"
+        :key="article.title"
+        :name="i"
+      >
+        <!-- and for no particular reason, this div must exist. I have stopped wondering why and instead
+          have come to the conclusion that I shall simply accept this and move on -->
+        <div>
+          <img
+            v-bind:src="article.photo"
+            class="h-[45%] w-[100%] rounded-none-child mb-0 rounded-t-[30px] object-cover"
+          />
+          <!-- container for bottom half -->
+          <div class="p-[20px]">
+            <div class="capitalize font-bold text-[20px] text-element-41black">
+              {{ article.title }}
+            </div>
+            <div class="text-[16px] font-light">{{ article.summary }}</div>
+          </div>
+        </div>
+
+        <div class="absolute bottom-[20px] right-[30px] text-slate-400">
+          {{ article.datePublished }}
+        </div>
+      </q-card>
+    </div>
+  </div>
 </template>
 
 <script>
 import useOikosProjects from "src/composables/useOikosProjects";
+import useOikosArticles from "src/composables/useOikosArticles";
+import useCycleEvents from "src/composables/useCycleEvents";
 
 export default {
   setup() {
     const { projects } = useOikosProjects();
+    const { articles } = useOikosArticles();
+    const { current } = useCycleEvents();
+
     return {
       progress1: 0.4,
       projects,
+      articles,
+      current,
     };
   },
 };

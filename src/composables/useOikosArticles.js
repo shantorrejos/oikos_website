@@ -8,6 +8,8 @@ for (let i = 0; i < 10; i++) {
     title: faker.lorem.words(),
     photo: faker.image.urlLoremFlickr(),
     content: faker.lorem.paragraphs(),
+    summary: faker.lorem.sentences(2),
+    datePublished: faker.date.month(),
   };
 }
 
