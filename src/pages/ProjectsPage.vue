@@ -67,45 +67,79 @@
       <p class="text-[20px] text-element-b39pink font-bold">CATEGORIES</p>
       <q-btn
         @click="toggleTag('Agriculture')"
-        outline
+        flat
         rounded
-        color="primary"
-        class="w-[150px] text-[15px] capitalize"
+        class="w-[150px] text-[15px] capitalize ring-1 ring-element-purple"
+        v-bind:class="
+          selectedTags.some((tag) => tag == 'Agriculture')
+            ? 'bg-element-purple text-white'
+            : 'bg-white text-element-purple'
+        "
         >Agriculture</q-btn
       >
       <q-btn
-        outline
+        @click="toggleTag('Education')"
+        flat
         rounded
         color="primary"
-        class="w-[150px] text-[15px] capitalize"
+        class="w-[150px] text-[15px] capitalize ring-1 ring-element-purple"
+        v-bind:class="
+          selectedTags.some((tag) => tag == 'Education')
+            ? 'bg-element-purple text-white'
+            : 'bg-white text-element-purple'
+        "
         >Education</q-btn
       >
       <q-btn
-        outline
+        @click="toggleTag('Healthcare')"
+        flat
         rounded
         color="primary"
-        class="w-[150px] text-[15px] capitalize"
+        class="w-[150px] text-[15px] capitalize ring-1 ring-element-purple"
+        v-bind:class="
+          selectedTags.some((tag) => tag == 'Healthcare')
+            ? 'bg-element-purple text-white'
+            : 'bg-white text-element-purple'
+        "
         >Healthcare</q-btn
       >
       <q-btn
-        outline
+        @click="toggleTag('Rural')"
+        flat
         rounded
         color="primary"
-        class="w-[150px] text-[15px] capitalize"
+        class="w-[150px] text-[15px] capitalize ring-1 ring-element-purple"
+        v-bind:class="
+          selectedTags.some((tag) => tag == 'Rural')
+            ? 'bg-element-purple text-white'
+            : 'bg-white text-element-purple'
+        "
         >Rural</q-btn
       >
       <q-btn
-        outline
+        @click="toggleTag('Technology')"
+        flat
         rounded
         color="primary"
-        class="w-[150px] text-[15px] capitalize"
+        class="w-[150px] text-[15px] capitalize ring-1 ring-element-purple"
+        v-bind:class="
+          selectedTags.some((tag) => tag == 'Technology')
+            ? 'bg-element-purple text-white'
+            : 'bg-white text-element-purple'
+        "
         >Technology</q-btn
       >
       <q-btn
-        outline
+        @click="toggleTag('Transportation')"
+        flat
         rounded
         color="primary"
-        class="w-[150px] text-[15px] capitalize"
+        class="w-[150px] text-[15px] capitalize ring-1 ring-element-purple"
+        v-bind:class="
+          selectedTags.some((tag) => tag == 'Transportation')
+            ? 'bg-element-purple text-white'
+            : 'bg-white text-element-purple'
+        "
         >Transportation</q-btn
       >
     </div>
@@ -141,7 +175,7 @@
         light
         bordered
         class="bg-white-700 h-[270px] w-[740px] rounded-bl-[20px] flex border-b-0 border-l-0"
-        v-for="(project, i) in projects"
+        v-for="(project, i) in filteredProjects"
         :key="project.name"
         :name="i"
       >
@@ -160,7 +194,7 @@
             {{ project.name }}
           </p>
           <p class="font-light text-[16px] text-element-purpink">
-            tags, placeholder, qwerty lorem
+            {{ project.tags.join(", ") }}
           </p>
           <p class="mt-[20px] font-light text-[18px]">
             {{ project.description }}
@@ -220,6 +254,7 @@
 </template>
 
 <script>
+import { ref, computed } from "vue";
 import useOikosProjects from "src/composables/useOikosProjects";
 import useOikosArticles from "src/composables/useOikosArticles";
 import useCycleEvents from "src/composables/useCycleEvents";
@@ -230,11 +265,35 @@ export default {
     const { articles } = useOikosArticles();
     const { current } = useCycleEvents();
 
+    const selectedTags = ref([]);
+
+    function toggleTag(tag) {
+      if (selectedTags.value.includes(tag)) {
+        const index = selectedTags.value.indexOf(tag);
+        if (index !== -1) {
+          selectedTags.value.splice(index, 1); // Remove the tag if it exists
+        }
+      } else {
+        selectedTags.value.push(tag); // Add the tag
+      }
+    }
+    const filteredProjects = computed(() => {
+      if (selectedTags.value.length === 0) {
+        return projects;
+      } else {
+        return projects.filter((project) =>
+          project.tags.some((tag) => selectedTags.value.includes(tag))
+        );
+      }
+    });
+
     return {
-      progress1: 0.4,
       projects,
       articles,
       current,
+      filteredProjects,
+      selectedTags,
+      toggleTag,
     };
   },
 };
