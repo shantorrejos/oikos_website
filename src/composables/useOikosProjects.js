@@ -35,7 +35,7 @@ function shuffleArray(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
-
+const statusOptions = ["completed", "ongoing"];
 // for projects
 for (let i = 0; i < 10; i++) {
   const availableTags = [
@@ -49,6 +49,7 @@ for (let i = 0; i < 10; i++) {
 
   shuffleArray(availableTags);
   const numTags = faker.number.int({ min: 1, max: 4 });
+
   projects[i] = {
     name: faker.lorem.words(2),
     photo: faker.image.urlPicsumPhotos(),
@@ -69,8 +70,9 @@ for (let i = 0; i < 10; i++) {
       .map(() => users[Math.random() * users.length - 1]),
     updates: Array(8)
       .fill()
-      .map(() => faker.lorem.sentence),
+      .map(() => faker.lorem.sentence()),
     progress: faker.number.float({ precision: 0.01 }),
+    status: statusOptions[Math.floor(Math.random() * statusOptions.length)],
   };
 }
 

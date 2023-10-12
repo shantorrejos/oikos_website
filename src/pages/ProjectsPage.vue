@@ -277,13 +277,14 @@ export default {
         selectedTags.value.push(tag); // Add the tag
       }
     }
+
     const filteredProjects = computed(() => {
       if (selectedTags.value.length === 0) {
         return projects;
       } else {
-        return projects.filter((project) =>
-          project.tags.some((tag) => selectedTags.value.includes(tag))
-        );
+        return projects.filter(function (project) {
+          return project.tags.some((tag) => selectedTags.value.includes(tag));
+        });
       }
     });
 
