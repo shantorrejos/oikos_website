@@ -303,21 +303,14 @@ export default {
       }
     }
 
-    const filteredProjects = computed(() => {
-      if (
-        selectedTags.value.length === 0 &&
-        selectedButton.value === "noChoice"
-      ) {
-        return projects; // Return the entire projects array when no tags and no choice for status are selected
-      } else {
-        return projects.filter(
-          (project) =>
-            project.tags.some((tag) => selectedTags.value.includes(tag)) &&
-            (selectedButton.value === "noChoice" ||
-              project.status === selectedButton.value)
-        );
-      }
-    });
+    const filteredProjects = computed(() =>
+      projects.filter((project) =>
+        project.tags.some((tag) => selectedTags.value.includes(tag)) &&
+        selectedButton.value == "noChoice"
+          ? true
+          : project.status === selectedButton.value
+      )
+    );
 
     return {
       projects,
