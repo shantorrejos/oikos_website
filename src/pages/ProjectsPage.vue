@@ -304,34 +304,30 @@ export default {
     }
 
     const filteredProjects = computed(() => {
-      if (
-        selectedTags.value.length === 0 &&
-        selectedButton.value === "noChoice"
-      ) {
-        return projects;
-      } else if (selectedTags.value.length === 0) {
-        if (selectedButton.value === "completed") {
-          return projects.filter((project) => {
-            return project.status === "completed";
-          });
-        } else {
-          return projects.filter((project) => {
-            return project.status === "ongoing";
-          });
+      return projects.filter((project) => {
+        if (
+          selectedTags.value.length > 0 &&
+          project.tags.every((tag) => !selectedTags.value.includes(tag))
+        ) {
+          return false;
         }
-      } else if (selectedButton.value === "noChoice") {
-        return projects.filter((project) => {
-          return project.tags.some((tag) => selectedTags.value.includes(tag));
-        });
-      } else {
-        return projects.filter(
-          (project) =>
-            project.tags.some((tag) => selectedTags.value.includes(tag)) &&
-            (selectedButton.value == "noChoice"
-              ? true
-              : project.status === selectedButton.value)
-        );
-      }
+
+        if (
+          selectedButton.value === "completed" &&
+          project.status !== "completed"
+        ) {
+          return false;
+        }
+
+        if (
+          selectedButton.value === "ongoing" &&
+          project.status !== "ongoing"
+        ) {
+          return false;
+        }
+
+        return true;
+      });
     });
 
     return {
