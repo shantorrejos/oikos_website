@@ -303,14 +303,36 @@ export default {
       }
     }
 
-    const filteredProjects = computed(() =>
-      projects.filter((project) =>
-        project.tags.some((tag) => selectedTags.value.includes(tag)) &&
-        selectedButton.value == "noChoice"
-          ? true
-          : project.status === selectedButton.value
-      )
-    );
+    const filteredProjects = computed(() => {
+      if (
+        selectedTags.value.length === 0 &&
+        selectedButton.value === "noChoice"
+      ) {
+        return projects;
+      } else if (selectedTags.value.length === 0) {
+        if (selectedButton.value === "completed") {
+          return projects.filter((project) => {
+            return project.status === "completed";
+          });
+        } else {
+          return projects.filter((project) => {
+            return project.status === "ongoing";
+          });
+        }
+      } else if (selectedButton.value === "noChoice") {
+        return projects.filter((project) => {
+          return project.tags.some((tag) => selectedTags.value.includes(tag));
+        });
+      } else {
+        return projects.filter(
+          (project) =>
+            project.tags.some((tag) => selectedTags.value.includes(tag)) &&
+            (selectedButton.value == "noChoice"
+              ? true
+              : project.status === selectedButton.value)
+        );
+      }
+    });
 
     return {
       projects,
