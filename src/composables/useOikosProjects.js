@@ -36,27 +36,41 @@ function shuffleArray(array) {
   }
 }
 const statusOptions = ["completed", "ongoing"];
+const availableTags = [
+  "Agriculture",
+  "Education",
+  "Healthcare",
+  "Rural",
+  "Technology",
+  "Transportation",
+];
+
 // for projects
 for (let i = 0; i < 10; i++) {
-  const availableTags = [
-    "Agriculture",
-    "Education",
-    "Healthcare",
-    "Rural",
-    "Technology",
-    "Transportation",
-  ];
+  const availableHashTags = Array(10)
+    .fill()
+    .map(() => faker.lorem.word());
 
   shuffleArray(availableTags);
+  shuffleArray(availableHashTags);
   const numTags = faker.number.int({ min: 1, max: 4 });
+  const numHashTags = faker.number.int({ min: 1, max: 10 });
 
   projects[i] = {
     name: faker.lorem.words(2),
     photo: faker.image.urlPicsumPhotos(),
     description: faker.lorem.sentences(2),
+    summary: faker.lorem.sentences(8),
     tags: availableTags.slice(0, numTags),
-    documentation: { photos: [], videos: [] },
-    articles: Array(5)
+    documentation: {
+      photos: Array(5)
+        .fill()
+        .map(() => faker.image.urlPicsumPhotos()),
+      videos: Array(5)
+        .fill()
+        .map(() => faker.image.urlPicsumPhotos()),
+    },
+    articles: Array(8)
       .fill()
       .map(() => articles[Math.random() * articles.length - 1]),
     accomplishments: Array(5)
@@ -73,6 +87,7 @@ for (let i = 0; i < 10; i++) {
       .map(() => faker.lorem.sentence()),
     progress: faker.number.float({ precision: 0.01 }),
     status: statusOptions[Math.floor(Math.random() * statusOptions.length)],
+    hashtags: availableHashTags.slice(0, numHashTags),
   };
 }
 

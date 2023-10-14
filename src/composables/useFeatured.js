@@ -1,5 +1,7 @@
 import { Faker, faker } from "@faker-js/faker";
+import useOikosProjects from "./useOikosProjects";
 
+const { projects } = useOikosProjects();
 const featuredProjects = [];
 const featuredArticles = [];
 
@@ -11,18 +13,23 @@ const featuredBanner = {
     .map(() => faker.image.urlLoremFlickr()),
 };
 
+const projectsCopy = [...projects];
 for (let i = 0; i < 3; i++) {
-  featuredProjects[i] = {
-    name: faker.lorem.words(2),
-    description: faker.lorem.paragraph(),
-    photo: faker.image.urlPicsumPhotos(),
-    tags: Array(faker.number.int({ min: 2, max: 4 }))
-      .fill()
-      .map(() => faker.helpers.arrayElement(["Agriculture", "Education"])),
-    progress: faker.number.float({ precision: 0.01 }),
-  };
-}
+  // Filter projectsCopy to select only "ongoing" projects
+  const ongoingProjects = projectsCopy.filter(
+    (project) => project.status === "ongoing"
+  );
 
+  if (ongoingProjects.length > 0) {
+    // Generate a random index within the ongoingProjects array length
+    const randomIndex = Math.floor(Math.random() * ongoingProjects.length);
+
+    // Remove the selected ongoing project from the projectsCopy array
+    const selectedProject = ongoingProjects.splice(randomIndex, 1)[0];
+
+    featuredProjects.push(selectedProject);
+  }
+}
 for (let i = 0; i < 3; i++) {
   featuredArticles[i] = {
     title: faker.lorem.words(),
