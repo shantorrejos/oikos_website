@@ -1,7 +1,12 @@
 <template>
   <!-- container for the top thing might be unnecessary-->
-  <div class="mb-[60px]">
+  <div class="mb-[60px] relative">
     <img :src="current.photo" class="w-[100vw] max-h-[550px] object-cover" />
+    <div
+      class="absolute top-5 left-10 font-bold uppercase text-white text-[30px]"
+    >
+      Featured
+    </div>
     <div class="flex items-end mt-[-170px] flex-nowrap gap-">
       <!-- Progress bar -->
       <div class="bg-white-600 h-[180px] w-[60vw]">
@@ -46,6 +51,7 @@
           <div class="mt-[20px] flex justify-between items-center">
             <p class="text-slate-300">icons here</p>
             <q-btn
+              @click="router.push('./project/' + current.name)"
               flat
               rounded
               class="bg-element-purpink text-white font-bold text-[14px] px-12 w-50 ml-auto"
@@ -209,13 +215,12 @@
           </p>
           <p class="font-light text-[16px] text-element-purpink">
             {{ project.tags.join(", ") }} <br />
-            {{ project.status }}
           </p>
           <p class="mt-[20px] font-light text-[18px]">
             {{ project.description }}
           </p>
           <div class="mt-[20px] flex justify-between items-center">
-            <p class="text-slate-300">icons here</p>
+            <p class="text-slate-300 capitalize">{{ project.status }}</p>
             <q-btn
               flat
               rounded
@@ -273,9 +278,11 @@ import { ref, computed } from "vue";
 import useOikosProjects from "src/composables/useOikosProjects";
 import useOikosArticles from "src/composables/useOikosArticles";
 import useCycleEvents from "src/composables/useCycleEvents";
+import { useRouter } from "vue-router";
 
 export default {
   setup() {
+    const router = useRouter();
     const { projects } = useOikosProjects();
     const { articles } = useOikosArticles();
     const { current } = useCycleEvents();
@@ -339,6 +346,7 @@ export default {
       toggleTag,
       toggleButton,
       selectedButton,
+      router,
     };
   },
 };
