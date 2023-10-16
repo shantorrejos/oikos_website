@@ -1,6 +1,8 @@
 import { faker } from "@faker-js/faker";
 import useOikosUsers from "./useOikosUsers";
 import useOikosArticles from "./useOikosArticles";
+import useDLC from "./useDLC";
+import { ref } from "vue";
 
 // This is TypeScript for people who don't want to use TypeScript.
 // Oftentimes, the big reason why lots of people use TypeScript is
@@ -11,7 +13,7 @@ import useOikosArticles from "./useOikosArticles";
 
 /**
  * @type {{
- * name: string,
+ * nayme: string,
  * photo: string,
  * description: string,
  * tags: string[],
@@ -25,16 +27,9 @@ import useOikosArticles from "./useOikosArticles";
  * }[]}
  */
 const projects = [];
-
 const { users } = useOikosUsers();
 const { articles } = useOikosArticles();
-
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
+const { dlc } = useDLC();
 const statusOptions = ["completed", "ongoing"];
 const availableTags = [
   "Agriculture",
@@ -44,6 +39,13 @@ const availableTags = [
   "Technology",
   "Transportation",
 ];
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
 
 // for projects
 for (let i = 0; i < 10; i++) {
@@ -72,8 +74,8 @@ for (let i = 0; i < 10; i++) {
     },
     articles: Array(8)
       .fill()
-      .map(() => articles[Math.random() * articles.length - 1]),
-    accomplishments: Array(5)
+      .map(() => articles[Math.floor(Math.random() * articles.length)]),
+    accomplishments: Array(10)
       .fill()
       .map(() => faker.lorem.word()),
     projectManagers: Array(5)
@@ -81,13 +83,14 @@ for (let i = 0; i < 10; i++) {
       .map(() => faker.person.fullName()),
     volunteers: Array(20)
       .fill()
-      .map(() => users[Math.random() * users.length - 1]),
+      .map(() => users[Math.floor(Math.random() * users.length)]),
     updates: Array(8)
       .fill()
       .map(() => faker.lorem.sentence()),
     progress: faker.number.float({ precision: 0.01 }),
     status: statusOptions[Math.floor(Math.random() * statusOptions.length)],
     hashtags: availableHashTags.slice(0, numHashTags),
+    dlcList: dlc,
   };
 }
 
