@@ -1,8 +1,8 @@
 import { faker } from "@faker-js/faker";
 import useOikosUsers from "./useOikosUsers";
-import useOikosArticles from "./useOikosArticles";
 import useDLC from "./useDLC";
 import { ref } from "vue";
+import useProjectUpdates from "./useProjectUpdates";
 
 // This is TypeScript for people who don't want to use TypeScript.
 // Oftentimes, the big reason why lots of people use TypeScript is
@@ -27,9 +27,10 @@ import { ref } from "vue";
  * }[]}
  */
 const projects = [];
+const articles = [];
 const { users } = useOikosUsers();
-const { articles } = useOikosArticles();
 const { dlc } = useDLC();
+const { projectUpdates } = useProjectUpdates();
 const statusOptions = ["completed", "ongoing"];
 const availableTags = [
   "Agriculture",
@@ -72,9 +73,7 @@ for (let i = 0; i < 10; i++) {
         .fill()
         .map(() => faker.image.urlPicsumPhotos()),
     },
-    articles: Array(8)
-      .fill()
-      .map(() => articles[Math.floor(Math.random() * articles.length)]),
+    articles: articles,
     accomplishments: Array(10)
       .fill()
       .map(() => faker.lorem.word()),
@@ -91,11 +90,26 @@ for (let i = 0; i < 10; i++) {
     status: statusOptions[Math.floor(Math.random() * statusOptions.length)],
     hashtags: availableHashTags.slice(0, numHashTags),
     dlcList: dlc,
+    topdonors: Array(4)
+      .fill()
+      .map(() => users[Math.floor(Math.random() * users.length)]),
+    projectUpdatesList: useProjectUpdates().projectUpdates,
   };
 }
 
 export default () => {
+  for (let i = 0; i < 10; i++) {
+    articles[i] = {
+      title: faker.lorem.words(),
+      photo: faker.image.urlLoremFlickr(),
+      content: faker.lorem.paragraphs(),
+      summary: faker.lorem.sentences(2),
+      datePublished: faker.date.month(),
+    };
+  }
+
   return {
     projects,
+    articles,
   };
 };
