@@ -67,7 +67,6 @@
         animated
         v-model="photoCarousel"
         arrows
-        navigation
         infinite
         class="w-[550px] mr-auto"
       >
@@ -83,7 +82,6 @@
         animated
         v-model="videoCarousel"
         arrows
-        navigation
         infinite
         class="w-[550px] ml-auto"
       >
@@ -97,7 +95,7 @@
     </div>
   </div>
 
-  <div class="flex justify-center items-center gap-[50px] my-[90px]">
+  <div class="flex justify-center items-center gap-[50px] my-[30px]">
     <div class="bg-element-b39pink h-[3px] w-[540px]"></div>
     <div class="text-[24px] font-bold text-element-41black">
       ARTI<span class="text-element-b39pink">CLES</span>
@@ -137,7 +135,7 @@
     </div>
   </div>
 
-  <div class="flex justify-center items-center gap-[50px] mt-[90px] mb-[40px]">
+  <div class="flex justify-center items-center gap-[50px] mt-[60px] mb-[40px]">
     <div class="bg-element-b39pink h-[3px] w-[485px]"></div>
     <div class="text-[24px] font-bold text-element-41black">
       ACCOMPL<span class="text-element-b39pink">ISHMENTS</span>
@@ -166,7 +164,7 @@
     </div>
   </div>
 
-  <div class="flex justify-center items-center gap-[50px] mt-[90px] mb-[40px]">
+  <div class="flex justify-center items-center gap-[50px] mt-[90px] mb-[10px]">
     <div class="bg-element-b39pink h-[3px] w-[485px]"></div>
     <div class="text-[24px] font-bold text-element-41black">
       BEHIND<span class="text-element-b39pink"> THE</span
@@ -237,6 +235,65 @@
       </div>
     </div>
   </div>
+  <div class="flex justify-center items-center gap-[50px] mt-[30px] mb-[40px]">
+    <div class="bg-element-b39pink h-[3px] w-[485px]"></div>
+    <div class="text-[24px] font-bold text-element-41black">
+      PROJECT<span class="text-element-b39pink"> UPDATES</span>
+    </div>
+    <div class="bg-element-b39pink h-[3px] w-[485px]"></div>
+  </div>
+  <div class="flex justify-center">
+    <div class="flex items-center w-[1200px] justify-center">
+      <div class="flex flex-col items-center leading-none mr-8">
+        <p class="text-element-purple text-[32px] font-bold">TOP</p>
+        <p class="text-element-purple text-[15px] font-bold">DONORS</p>
+      </div>
+
+      <div
+        class="flex border-[1px] bg-element-b39pink rounded-[20px] text-[20px] text-white px-10 m-2 flex-wrap capitalize h-[50px] items-center font-bold"
+        v-for="(topdonor, i) in activeProject.topdonors"
+        :key="i"
+      >
+        {{ topdonor.displayName }}
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-center mt-10">
+    <div class="flex flex-col items-center w-[1000px]">
+      <div
+        class="flex items-center gap-2 justify-between mb-10"
+        v-for="(projectUpdate, i) in sortedProjectUpdates"
+        :key="i"
+      >
+        <p class="text-[24px] font-bold uppercase text-element-b39pink">
+          {{ projectUpdate.month }}
+        </p>
+        <div class="bg-element-b39pink h-[3px] w-[850px]"></div>
+
+        <ul
+          class="border-[2px] border-element-b39pink rounded-[20px] w-full h-fit p-[20px] list-disc"
+          v-for="(updateInstance, i) in projectUpdate.content"
+          :key="i"
+        >
+          <p class="uppercase text-element-purple text-[20px]">
+            {{ updateInstance.title }}
+          </p>
+
+          <li
+            class="ml-[20px] text-element-41black text-[15px]"
+            v-for="(cont, i) in updateInstance.updateList"
+            :key="i"
+          >
+            {{ cont }}
+          </li>
+        </ul>
+      </div>
+      <p class="text-element-b39pink text-[17px] mb-16">
+        Do stay tuned for more updates with this project!
+      </p>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -254,7 +311,12 @@ export default {
       (Object) => Object.name === route.params.name
     );
 
-    console.log();
+    const sortedProjectUpdates = computed(() => {
+      return activeProject.projectUpdatesList.slice().sort((a, b) => {
+        // Sort in descending order by comparing the months
+        return b.month.localeCompare(a.month);
+      });
+    });
 
     const downloadContent = function (i) {
       const dlcObject = activeProject.dlcList[i]; // Access the object at index i from dlcList
@@ -293,6 +355,7 @@ export default {
       activeProject,
       completeTags,
       downloadContent,
+      sortedProjectUpdates,
     };
   },
 };

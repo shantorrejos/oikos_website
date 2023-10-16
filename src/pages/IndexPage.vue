@@ -9,7 +9,7 @@
         navigation
         infinite
         :autoplay="3000"
-        class="p-0 max-w-full h-[700px]"
+        class="p-0 max-w-full h-[700px] relative"
       >
         <!-- Place holder, code javascript later -->
         <q-carousel-slide
@@ -17,7 +17,8 @@
           :key="project.name"
           :name="i"
           :img-src="project.photo"
-        />
+        >
+        </q-carousel-slide>
       </q-carousel>
       <p
         class="absolute bottom-20 right-10 text-white p-4 text-right font-bold text-header leading-none"

@@ -10,10 +10,15 @@ const routes = [
         path: "project/:name",
         component: () => import("pages/ProjectPage.vue"),
       },
+
+      {
+        path: "article/:name",
+        component: () => import("pages/ArticlePage.vue"),
+      },
     ],
   },
 
-  // Always leave this as last one,
+  // Always leave this as last one,"
   // but you can also remove it
   {
     path: "/:catchAll(.*)*",

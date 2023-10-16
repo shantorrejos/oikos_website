@@ -222,6 +222,7 @@
           <div class="mt-[20px] flex justify-between items-center">
             <p class="text-slate-300 capitalize">{{ project.status }}</p>
             <q-btn
+              @click="router.push('./project/' + project.name)"
               flat
               rounded
               class="bg-element-purpink text-white font-bold text-[14px] px-12 w-50 ml-auto"
@@ -239,6 +240,7 @@
     <div class="bg-element-purple h-[3px] w-[100%] my-[20px]"></div>
 
     <div
+      @click="router.push('./article/' + current.name)"
       class="flex flex-col overflow-x-auto h-[500px] my-[50px] gap-y-14 gap-x-10 p-[4px]"
     >
       <q-card
@@ -276,7 +278,6 @@
 <script>
 import { ref, computed } from "vue";
 import useOikosProjects from "src/composables/useOikosProjects";
-import useOikosArticles from "src/composables/useOikosArticles";
 import useCycleEvents from "src/composables/useCycleEvents";
 import { useRouter } from "vue-router";
 
@@ -284,7 +285,7 @@ export default {
   setup() {
     const router = useRouter();
     const { projects } = useOikosProjects();
-    const { articles } = useOikosArticles();
+    const { articles } = useOikosProjects();
     const { current } = useCycleEvents();
 
     const selectedTags = ref([]);
