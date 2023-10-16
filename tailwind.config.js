@@ -14,6 +14,7 @@ module.exports = {
         "element-b39pink": "#B393AB",
         "element-E7Cpink": "#E7C2CA",
         "element-24black": "#2F2F2F",
+        "element-EAgray": "#EAEAEA",
       },
     },
   },
