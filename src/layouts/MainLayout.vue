@@ -1,6 +1,9 @@
 <template>
   <q-layout view="hHh lpR fff">
-    <q-header class="flex justify-between bg-white text-black" height-hint="98">
+    <q-header
+      class="flex justify-between bg-white text-black drop-shadow-lg"
+      height-hint="98"
+    >
       <div class="flex p-4">
         <a @click="$router.push('/')" class="cursor-pointer">
           <img src="../assets/qweqw.png" width="170" class="ml-4" />
