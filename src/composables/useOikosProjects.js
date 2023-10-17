@@ -13,7 +13,7 @@ import useProjectUpdates from "./useProjectUpdates";
 
 /**
  * @type {{
- * nayme: string,
+ * name: string,
  * photo: string,
  * description: string,
  * tags: string[],
@@ -27,7 +27,7 @@ import useProjectUpdates from "./useProjectUpdates";
  * }[]}
  */
 const projects = [];
-const articles = [];
+
 const { users } = useOikosUsers();
 const { dlc } = useDLC();
 const { projectUpdates } = useProjectUpdates();
@@ -58,6 +58,18 @@ for (let i = 0; i < 10; i++) {
   shuffleArray(availableHashTags);
   const numTags = faker.number.int({ min: 1, max: 4 });
   const numHashTags = faker.number.int({ min: 1, max: 10 });
+
+  const articles = [];
+  for (let i = 0; i < 3; i++) {
+    articles[i] = {
+      title: faker.lorem.words(),
+      author: faker.person.fullName(),
+      photo: faker.image.urlLoremFlickr(),
+      content: faker.lorem.paragraphs(50),
+      summary: faker.lorem.sentences(2),
+      datePublished: faker.date.month(),
+    };
+  }
 
   projects[i] = {
     name: faker.lorem.words(2),
@@ -98,18 +110,7 @@ for (let i = 0; i < 10; i++) {
 }
 
 export default () => {
-  for (let i = 0; i < 10; i++) {
-    articles[i] = {
-      title: faker.lorem.words(),
-      photo: faker.image.urlLoremFlickr(),
-      content: faker.lorem.paragraphs(),
-      summary: faker.lorem.sentences(2),
-      datePublished: faker.date.month(),
-    };
-  }
-
   return {
     projects,
-    articles,
   };
 };
