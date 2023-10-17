@@ -240,16 +240,15 @@
     <div class="bg-element-purple h-[3px] w-[100%] my-[20px]"></div>
 
     <div
-      @click="router.push('./article/' + current.name)"
       class="flex flex-col overflow-x-auto h-[500px] my-[50px] gap-y-14 gap-x-10 p-[4px]"
     >
       <q-card
         light
         bordered
-        class="bg-white-700 h-[475px] w-[285px] rounded-[30px] flex relative"
-        v-for="(article, i) in articles"
-        :key="article.title"
-        :name="i"
+        class="bg-white-700 h-[475px] w-[285px] rounded-[30px] flex relative cursor-pointer"
+        v-for="(article, i) in limitedArticles"
+        :key="i"
+        @click="router.push('./article/' + article.title)"
       >
         <!-- and for no particular reason, this div must exist. I have stopped wondering why and instead
           have come to the conclusion that I shall simply accept this and move on -->
@@ -290,6 +289,25 @@ export default {
 
     const selectedTags = ref([]);
     const selectedButton = ref("noChoice");
+
+    // Shuffle the projects to randomize the order
+    const shuffledProjects = [...projects].sort(() => Math.random() - 0.5);
+
+    // Initialize the result array
+    const allArticles = [];
+
+    for (const project of shuffledProjects) {
+      // Concatenate the project's articles with the result
+      allArticles.push(...project.articles);
+
+      // Check if the result array has reached the desired size (e.g., 20)
+      if (allArticles.length >= 20) {
+        break;
+      }
+    }
+
+    // Slice the result array to the fixed size (e.g., 20)
+    const limitedArticles = allArticles.slice(0, 20);
 
     function toggleTag(tag) {
       if (selectedTags.value.includes(tag)) {
@@ -348,6 +366,8 @@ export default {
       toggleButton,
       selectedButton,
       router,
+      allArticles,
+      limitedArticles,
     };
   },
 };
