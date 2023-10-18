@@ -109,9 +109,10 @@
       class="flex flex-col overflow-auto h-[340px] my-[50px] gap-y-14 gap-x-10 p-[4px] items-center"
     >
       <q-card
+        @click="router.push('/article/' + article.title)"
         light
         bordered
-        class="bg-white-700 h-[300px] w-[265px] rounded-[30px] flex relative bg-slate-100 drop-shadow-md"
+        class="bg-white-700 h-[300px] w-[265px] rounded-[30px] flex relative bg-slate-100 drop-shadow-md cursor-pointer"
         v-for="(article, i) in activeProject.articles"
         :key="i"
         :name="i"
@@ -272,11 +273,13 @@
         <div class="bg-element-b39pink h-[3px] w-[850px]"></div>
 
         <ul
-          class="border-[2px] border-element-b39pink rounded-[20px] w-full h-fit p-[20px] list-disc"
+          class="border-[2px] border-element-b39pink rounded-[20px] w-full h-fit py-[25px] px-[30px] list-disc"
           v-for="(updateInstance, i) in projectUpdate.content"
           :key="i"
         >
-          <p class="uppercase text-element-purple text-[20px]">
+          <p
+            class="uppercase text-element-purple text-[20px] font-roboto-condensed-medium"
+          >
             {{ updateInstance.title }}
           </p>
 
@@ -297,7 +300,7 @@
 </template>
 
 <script>
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import useOikosProjects from "src/composables/useOikosProjects";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { computed, ref } from "vue";
@@ -305,6 +308,7 @@ import { computed, ref } from "vue";
 export default {
   setup() {
     const route = useRoute();
+    const router = useRouter();
     const { projects } = useOikosProjects();
 
     const activeProject = projects.find(
@@ -351,6 +355,7 @@ export default {
       photoCarousel: ref(0),
       videoCarousel: ref(0),
       route,
+      router,
       projects,
       activeProject,
       completeTags,
