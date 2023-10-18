@@ -7,19 +7,29 @@
   </div>
 
   <div class="flex flex-col items-center">
-    <p>Article</p>
-    <p>{{ article.title }}</p>
-    <div class="flex w-[800px] justify-center] gap-10">
-      <p class="flex-1 text-right uppercase">{{ article.datePublished }}</p>
+    <p class="uppercase text-element-b39pink">Article</p>
+    <p class="uppercase text-element-purple font-bold text-[40px]">
+      {{ article.title }}
+    </p>
+    <div
+      class="flex w-[800px] justify-center text-element-b39pink gap-10 mt-[-10px]"
+    >
+      <p class="flex-1 text-right uppercase text-[14px]">
+        {{ article.datePublished }}
+      </p>
       <div class="w-[3px] h-[20px] bg-element-b39pink rounded-[30px]"></div>
-      <p class="flex-1 uppercase">BY {{ article.author }}</p>
+      <p class="flex-1 uppercase text-[14px]">BY {{ article.author }}</p>
     </div>
-    <p>{{ article.summary }}</p>
+    <p class="w-[400px] my-[30px] text-center text-element-41black">
+      {{ article.summary }}
+    </p>
     <img
       v-bind:src="article.photo"
       class="min-w-[800px] h-[420px] object-cover"
     />
-    <p class="w-[800px] text-justify">{{ article.content }}</p>
+    <p class="w-[800px] text-justify font-light text-[20px] my-[50px]">
+      {{ article.content }}
+    </p>
   </div>
 </template>
 
