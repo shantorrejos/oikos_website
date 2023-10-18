@@ -16,6 +16,10 @@ module.exports = {
         "element-24black": "#2F2F2F",
         "element-EAgray": "#EAEAEA",
       },
+      fontFamily: {
+        "roboto-condensed-medium": ["Roboto Condensed Medium", "sans"],
+        "roboto-condensed": ["Roboto Condensed", "sans"],
+      },
     },
   },
   plugins: [],

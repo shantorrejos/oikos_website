@@ -1,9 +1,10 @@
 // app global css in SCSS form
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Roboto:wght@100;300;400;500;700;900&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;500;700&family=Roboto:wght@100;300;400;500;700;900&display=swap");
+@import url("https://db.onlinewebfonts.com/c/37dac052614e6b0313388bb20acdc929?family=Roboto+Condensed+Medium");
 * {
   font-family: "Roboto", sans-serif;
+  font-family: "Roboto Condensed Medium", sans-serif;
   font-family: "Roboto Condensed", sans-serif;
 }
 
