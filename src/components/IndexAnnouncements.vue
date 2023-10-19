@@ -63,4 +63,10 @@
   </q-carousel>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+import useOikosAnnouncements from "src/composables/useOikosAnnouncements";
+
+const { announcements } = useOikosAnnouncements();
+const slideAnnouceMain = ref(0);
+</script>
