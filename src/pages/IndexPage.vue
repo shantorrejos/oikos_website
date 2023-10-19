@@ -1,32 +1,7 @@
 <template>
   <div class="q-pa-md">
     <!-- main carousel -->
-    <div class="relative m-0">
-      <q-carousel
-        animated
-        v-model="slideMain"
-        arrows
-        navigation
-        infinite
-        :autoplay="3000"
-        class="p-0 max-w-full h-[700px] relative"
-      >
-        <!-- Place holder, code javascript later -->
-        <q-carousel-slide
-          v-for="(project, i) in projects"
-          :key="project.name"
-          :name="i"
-          :img-src="project.photo"
-        >
-        </q-carousel-slide>
-      </q-carousel>
-      <p
-        class="absolute bottom-20 right-10 text-white p-4 text-right font-bold text-header leading-none"
-      >
-        BIG INITIATIVES FOR<br />
-        SMALL COMMUNITIES
-      </p>
-    </div>
+    <index-carousel />
     <!-- donate button -->
     <q-carousel
       animated
@@ -364,37 +339,25 @@
   </div>
 </template>
 
-<script>
-import { QBtn } from "quasar";
+<script setup>
 import { ref } from "vue";
 import useOikosProjects from "src/composables/useOikosProjects";
 import useOikosAnnouncements from "src/composables/useOikosAnnouncements";
 import useEngage from "src/composables/useEngage";
 import useFeatured from "src/composables/useFeatured";
+import { QBtn } from "quasar";
+import IndexCarousel from "src/components/IndexCarousel.vue";
 
-export default {
-  setup() {
-    const { projects } = useOikosProjects();
-    const { announcements } = useOikosAnnouncements();
-    const { engage } = useEngage();
-    const { featuredBanner } = useFeatured();
-    const { featuredProjects } = useFeatured();
-    const { featuredArticles } = useFeatured();
+const { projects } = useOikosProjects();
+const { announcements } = useOikosAnnouncements();
+const { engage } = useEngage();
+const { featuredBanner } = useFeatured();
+const { featuredProjects } = useFeatured();
+const { featuredArticles } = useFeatured();
 
-    return {
-      slideMain: ref(0),
-      slideAnnouceMain: ref(0),
-      slideAnnouncement: ref(0),
-      slideProject: ref(0),
-      slideArticles: ref(0),
-      projects,
-      announcements,
-      engage,
-      featuredBanner,
-      featuredProjects,
-      featuredArticles,
-    };
-  },
-  components: { QBtn },
-};
+const slideMain = ref(0);
+const slideAnnouceMain = ref(0);
+const slideAnnouncement = ref(0);
+const slideProject = ref(0);
+const slideArticles = ref(0);
 </script>
