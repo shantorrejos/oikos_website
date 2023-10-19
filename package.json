@@ -19,6 +19,8 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "@quasar/extras": "^1.16.4",
+    "firebase": "^10.5.0",
+    "firebaseui": "^6.1.0",
     "quasar": "^2.6.0",
     "tailwindcss": "^3.3.3",
     "vue": "^3.0.0",

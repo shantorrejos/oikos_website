@@ -36,6 +36,7 @@
         <q-btn
           flat
           class="w-32 h-12 shadow-none text-nav font-bold text-element-purple"
+          @click="$router.push('/login')"
         >
           Sign In
         </q-btn>
