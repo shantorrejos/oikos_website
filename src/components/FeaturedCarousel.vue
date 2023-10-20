@@ -35,12 +35,25 @@
 
             <div style="display: flex; gap: 30px; margin-top: 10px">
               <q-btn
+                v-if="item.title"
+                @click="router.push('./article/' + item.title)"
                 flat
                 rounded
                 class="bg-element-purpink text-white font-bold text-[14px] px-12 w-50"
                 >View More</q-btn
               >
               <q-btn
+                v-if="item.name"
+                @click="router.push('/project/' + item.name)"
+                flat
+                rounded
+                class="bg-element-purpink text-white font-bold text-[14px] px-12 w-50"
+                >View More</q-btn
+              >
+
+              <q-btn
+                v-if="item.name"
+                @click="logx(item.name)"
                 flat
                 rounded
                 class="bg-element-purpink text-white font-bold text-[14px] px-12 w-50"
@@ -84,10 +97,14 @@
 <script setup>
 import { ref } from "vue";
 import { defineProps } from "vue";
+import { useRouter } from "vue-router";
 
 const props = defineProps({
   items: Array,
 });
-
+const router = useRouter();
 const slideModel = ref(0);
+const logx = (x) => {
+  console.log(x);
+};
 </script>
