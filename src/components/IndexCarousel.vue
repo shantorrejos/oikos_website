@@ -1,0 +1,35 @@
+<template>
+  <div class="relative m-0">
+    <q-carousel
+      animated
+      v-model="slideMain"
+      arrows
+      navigation
+      infinite
+      :autoplay="3000"
+      class="p-0 max-w-full h-[700px] relative"
+    >
+      <q-carousel-slide
+        v-for="(project, i) in projects"
+        :key="project.name"
+        :name="i"
+        :img-src="project.photo"
+      >
+      </q-carousel-slide>
+    </q-carousel>
+    <p
+      class="absolute bottom-20 right-10 text-white p-4 text-right font-bold text-header leading-none"
+    >
+      BIG INITIATIVES FOR<br />
+      SMALL COMMUNITIES
+    </p>
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import useOikosProjects from "src/composables/useOikosProjects";
+
+const { projects } = useOikosProjects();
+const slideMain = ref(0);
+</script>
