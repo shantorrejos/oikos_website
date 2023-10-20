@@ -44,7 +44,6 @@ export default {
     const route = useRoute();
     const { projects } = useOikosProjects();
     const articleNameToFind = route.params.title;
-    console.log(articleNameToFind);
 
     const articleProject = projects.find((project) => {
       // Check if the project contains an article with the matching name

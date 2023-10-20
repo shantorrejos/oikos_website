@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-const announcements = ref([]);
+const announcements = [];
 
 for (let i = 0; i < 3; i++) {
   announcements[i] = {
