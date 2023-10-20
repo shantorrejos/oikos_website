@@ -81,7 +81,6 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import useEngage from "src/composables/useEngage";
 import useFeatured from "src/composables/useFeatured";
 import { QBtn } from "quasar";

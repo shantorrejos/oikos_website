@@ -11,16 +11,19 @@
     id="announcementIndex"
   >
     <q-carousel-slide
-      class="p-0 w-[250px] h-[150px]"
+      class="p-0 w-[250px] h-[150px] relative"
       v-for="(announcement, i) in announcements"
       :key="announcement.type"
       :name="i"
     >
-      <div class="max-w-fit">
-        <p class="font-semibold text-element-purple text-[24px] my-[20px]">
+      <div class="h-[80px] relative">
+        <p
+          class="font-semibold text-element-purple text-[24px] absolute left-[20px] bottom-[20px]"
+        >
           ANNOUNCEMENTS
         </p>
       </div>
+
       <q-card light bordered class="bg-white mb-[60px] rounded-3xl relative">
         <p class="absolute top-2 right-4 text-element-purple">TODAY</p>
         <q-card-section class="p-80px">
