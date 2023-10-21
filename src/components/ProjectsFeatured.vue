@@ -65,6 +65,8 @@
 
 <script setup>
 import useCycleFeaturedProjects from "src/composables/useCycleFeaturedProjects";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 const { current } = useCycleFeaturedProjects();
 </script>
