@@ -10,10 +10,7 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
 import ProjectsFeatured from "src/components/ProjectsFeatured.vue";
 import ProjectsList from "src/components/ProjectsList.vue";
 import ArticlesList from "src/components/ArticlesList.vue";
-
-const router = useRouter();
 </script>

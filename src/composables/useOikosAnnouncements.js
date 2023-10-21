@@ -1,14 +1,23 @@
-import { faker } from "@faker-js/faker";
+import { ref } from "vue";
+import db from "src/components/firebaseInit";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 
-const announcements = [];
+let announcements = ref([]);
 
-for (let i = 0; i < 3; i++) {
-  announcements[i] = {
-    type: `${faker.lorem.words(3)} :`,
-    content: faker.lorem.sentence(),
-    date: faker.date.soon(),
-  };
-}
+const fetchAnnouncements = async () => {
+  const announcementsRef = collection(db, "announcements");
+  const querySnapshot = await getDocs(announcementsRef);
+
+  announcements.value = querySnapshot.docs.map((doc) => {
+    return {
+      id: doc.id, // Document ID
+      ...doc.data(), // Document data (type, content, date, etc.)
+    };
+  });
+};
+
+// Call the fetchAnnouncements function to populate announcementOikos
+fetchAnnouncements();
 
 export default () => {
   return {
