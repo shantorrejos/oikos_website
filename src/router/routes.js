@@ -19,6 +19,14 @@ const routes = [
       { path: "signup", component: () => import("pages/SignupPage.vue") },
       { path: "test", component: () => import("pages/TestPage.vue") },
       { path: "testfetch", component: () => import("pages/TestPageFetch.vue") },
+      {
+        path: "testprojects",
+        component: () => import("pages/TestProjects.vue"),
+      },
+      {
+        path: "testusers",
+        component: () => import("pages/TestUsers.vue"),
+      },
     ],
   },
 
