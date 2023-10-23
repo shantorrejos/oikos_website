@@ -30,7 +30,7 @@
               {{ item.title ? item.title : item.name }}
             </p>
             <p class="text-[22px] font-thin text-element-24black mb-[20px]">
-              {{ item.description }}
+              {{ item.description ? item.description : item.summary }}
             </p>
 
             <div style="display: flex; gap: 30px; margin-top: 10px">

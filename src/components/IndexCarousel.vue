@@ -4,7 +4,6 @@
       animated
       v-model="slideMain"
       arrows
-      navigation
       infinite
       :autoplay="3000"
       class="p-0 max-w-full h-[700px] relative"

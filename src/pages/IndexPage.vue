@@ -10,7 +10,7 @@
 
     <!-- Engage section -->
     <div class="flex items-center justify-center gap-[40px] m-[50px] mt-0">
-      <img v-bind:src="engage.photo" class="relative h-[400px] w-auto" />
+      <img v-bind:src="engage" class="relative h-[400px] w-auto" />
 
       <div class="max-w-[400px]">
         <div align="center" class="flex flex-col items-center">
@@ -47,7 +47,13 @@
     </label-head>
 
     <!-- SHOUT banner -->
-    <shout-carousel />
+
+    <div>
+      <div v-if="loading">Loading...</div>
+      <div v-else>
+        <shout-carousel />
+      </div>
+    </div>
 
     <!-- projects label -->
     <div align="center">
@@ -60,9 +66,14 @@
 
     <!-- projects carousel  -->
 
-    <featured-carousel :items="featuredProjects">
-      <template #default
-    /></featured-carousel>
+    <div>
+      <div v-if="loading">Loading...</div>
+      <div v-else>
+        <featured-carousel :items="featuredProjects">
+          <template #default
+        /></featured-carousel>
+      </div>
+    </div>
 
     <!-- Articles label -->
     <div align="center">
@@ -74,9 +85,15 @@
     </div>
 
     <!-- articles carousel -->
-    <featured-carousel :items="featuredArticles">
-      <template #default
-    /></featured-carousel>
+
+    <div>
+      <div v-if="loading">Loading...</div>
+      <div v-else>
+        <featured-carousel :items="featuredArticles">
+          <template #default
+        /></featured-carousel>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -90,7 +107,11 @@ import LabelHead from "src/components/LabelHead.vue";
 import ShoutCarousel from "src/components/ShoutCarousel.vue";
 import FeaturedCarousel from "src/components/FeaturedCarousel.vue";
 
-const { engage } = useEngage();
+// const { engage } = useFeatured();
+
+const { engage } = useFeatured();
+const { loading } = useFeatured();
 const { featuredProjects } = useFeatured();
 const { featuredArticles } = useFeatured();
+const { shout } = useFeatured();
 </script>

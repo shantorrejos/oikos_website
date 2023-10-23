@@ -1,6 +1,7 @@
 <template>
   <div align="center" class="relative mx-auto max-w-fit">
     <q-carousel
+      v-if="shout"
       control="false"
       animated
       v-model="slideShoutCarousel"
@@ -12,7 +13,7 @@
     >
       <!-- Place holder, code javascript later -->
       <q-carousel-slide
-        v-for="(featuredPhoto, i) in featuredBanner.photo"
+        v-for="(featuredPhoto, i) in shout.photo"
         :key="featuredPhoto"
         :name="i"
         :img-src="featuredPhoto"
@@ -22,10 +23,10 @@
     <!-- textoverlay for announcement -->
     <div class="absolute w-[417px] top-5 left-10">
       <p class="text-[45px] text-left font-bold text-white uppercase">
-        {{ featuredBanner.title }}
+        {{ shout?.title }}
       </p>
       <p class="text-[20px] text-white text-left font-thin">
-        {{ featuredBanner.content }}
+        {{ shout?.content }}
       </p>
       <div class="flex gap-[20px] my-3">
         <q-btn
@@ -49,7 +50,6 @@
 import { ref } from "vue";
 import useFeatured from "src/composables/useFeatured";
 
-const { featuredBanner } = useFeatured();
-
+const { shout } = useFeatured();
 const slideShoutCarousel = ref(0);
 </script>

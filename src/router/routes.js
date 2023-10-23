@@ -27,6 +27,14 @@ const routes = [
         path: "testusers",
         component: () => import("pages/TestUsers.vue"),
       },
+      {
+        path: "testarticles",
+        component: () => import("pages/TestArticles.vue"),
+      },
+      {
+        path: "testfeatured",
+        component: () => import("pages/TestFeatured.vue"),
+      },
     ],
   },
 

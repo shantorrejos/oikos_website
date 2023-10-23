@@ -1,48 +1,53 @@
-import { Faker, faker } from "@faker-js/faker";
-import useOikosProjects from "./useOikosProjects";
+import { ref, onMounted } from "vue";
+import db from "src/components/firebaseInit";
+import { doc, getDoc } from "firebase/firestore";
 
-const { projects } = useOikosProjects();
-const featuredProjects = [];
-const featuredArticles = [];
+const getFeaturedData = () => {
+  const engage = ref(null);
+  const featuredProjects = ref([]);
+  const featuredArticles = ref([]);
+  const shout = ref(null);
+  const loading = ref(true); // Loading indicator
 
-const featuredBanner = {
-  title: faker.lorem.words(3),
-  content: faker.lorem.paragraph(),
-  photo: Array(5)
-    .fill()
-    .map(() => faker.image.urlLoremFlickr()),
-};
+  onMounted(async () => {
+    try {
+      const docRef = doc(db, "featured", "DcOlSVkzU673D4Zp9Vjv");
+      const doc_ = await getDoc(docRef);
+      const data = doc_.data();
 
-const projectsCopy = [...projects];
-for (let i = 0; i < 3; i++) {
-  // Filter projectsCopy to select only "ongoing" projects
-  const ongoingProjects = projectsCopy.filter(
-    (project) => project.status === "ongoing"
-  );
+      engage.value = data.engage || null;
+      shout.value = data.shout || null;
 
-  if (ongoingProjects.length > 0) {
-    // Generate a random index within the ongoingProjects array length
-    const randomIndex = Math.floor(Math.random() * ongoingProjects.length);
+      // Fetch featured projects based on document IDs
+      const projectPromises = data.featuredProjects.map(async (projectId) => {
+        const projectRef = doc(db, "projects", projectId);
+        const projectDoc = await getDoc(projectRef);
+        return projectDoc.data();
+      });
+      featuredProjects.value = await Promise.all(projectPromises);
 
-    // Remove the selected ongoing project from the projectsCopy array
-    const selectedProject = ongoingProjects.splice(randomIndex, 1)[0];
+      // Fetch featured articles based on document IDs
+      const articlePromises = data.featuredArticles.map(async (articleId) => {
+        const articleRef = doc(db, "articles", articleId);
+        const articleDoc = await getDoc(articleRef);
+        return articleDoc.data();
+      });
+      featuredArticles.value = await Promise.all(articlePromises);
 
-    featuredProjects.push(selectedProject);
-  }
-}
-for (let i = 0; i < 3; i++) {
-  featuredArticles[i] = {
-    title: faker.lorem.words(),
-    photo: faker.image.urlPicsumPhotos(),
-    description: faker.lorem.sentences(2),
-    content: faker.lorem.paragraphs(),
-  };
-}
+      loading.value = false; // Data is loaded
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      loading.value = false; // Set loading to false to handle errors
+    }
+  });
 
-export default () => {
   return {
-    featuredBanner,
+    engage,
     featuredProjects,
     featuredArticles,
+    shout,
+    loading, // Provide loading indicator
   };
 };
+
+export default getFeaturedData;

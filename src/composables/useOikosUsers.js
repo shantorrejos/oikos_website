@@ -9,7 +9,10 @@ for (let i = 0; i < 20; i++) {
     birthday: faker.date.birthdate(),
     location: `${faker.location.buildingNumber()} ${faker.location.city()} ${faker.location.country()}`,
     gender: { sex: faker.person.sex(), pronouns: faker.person.prefix() },
-    contact: { email: faker.internet.email(), phoneNumber: faker.phone.number },
+    contact: {
+      email: faker.internet.email(),
+      phoneNumber: faker.phone.number(),
+    },
   };
 }
 
