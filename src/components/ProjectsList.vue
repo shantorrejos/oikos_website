@@ -171,12 +171,23 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import useOikosProjects from "src/composables/useOikosProjects";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const selectedTags = ref([]);
 const selectedButton = ref("noChoice");
 const { projects } = useOikosProjects();
+
+// Create a flag to check if projects are loaded
+const projectsLoaded = ref(false);
+
+// Watch the projects data and set the flag when it's populated
+watch(projects, () => {
+  projectsLoaded.value = true;
+});
 
 function toggleTag(tag) {
   if (selectedTags.value.includes(tag)) {
@@ -199,7 +210,11 @@ function toggleButton(button) {
 }
 
 const filteredProjects = computed(() => {
-  return projects.filter((project) => {
+  if (!projectsLoaded.value || !Array.isArray(projects.value)) {
+    return []; // Return an empty array if projects are not loaded or not an array
+  }
+
+  return projects.value.filter((project) => {
     if (
       selectedTags.value.length > 0 &&
       project.tags.every((tag) => !selectedTags.value.includes(tag))

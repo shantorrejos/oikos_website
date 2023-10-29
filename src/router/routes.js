@@ -35,6 +35,10 @@ const routes = [
         path: "testfeatured",
         component: () => import("pages/TestFeatured.vue"),
       },
+      {
+        path: "userprofile",
+        component: () => import("pages/UserProfilePage.vue"),
+      },
     ],
   },
 

@@ -33,7 +33,18 @@
         >
           Search
         </q-btn>
+
         <q-btn
+          v-if="isAuthenticated"
+          flat
+          class="w-32 h-12 shadow-none text-nav font-bold text-element-purple"
+          @click="$router.push('/userprofile')"
+        >
+          USER PROFILE
+        </q-btn>
+
+        <q-btn
+          v-else
           flat
           class="w-32 h-12 shadow-none text-nav font-bold text-element-purple"
           @click="$router.push('/login')"
@@ -140,3 +151,43 @@
     </q-footer>
   </q-layout>
 </template>
+
+<script setup>
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onMounted, ref, onUnmounted } from "vue";
+
+const auth = getAuth();
+const isAuthenticated = ref(false);
+
+onMounted(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    isAuthenticated.value = !!user;
+  });
+
+  // Make sure to unsubscribe when the component is unmounted
+  onUnmounted(unsubscribe);
+});
+</script>
+
+<!-- bot is sign out lol xd -->
+<!-- <script setup>
+import { onMounted, ref } from "vue";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+
+const isLoggedIn = ref(false);
+
+let auth;
+
+onMounted = () => {
+  auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isLoggedIn.value = true;
+    } else {
+      isLoggedIn.value = false;
+    }
+  });
+};
+
+const handleSignOut = () => {};
+</script> -->

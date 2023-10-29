@@ -311,7 +311,7 @@ export default {
     const router = useRouter();
     const { projects } = useOikosProjects();
 
-    const activeProject = projects.find(
+    const activeProject = projects.value.find(
       (Object) => Object.name === route.params.name
     );
 

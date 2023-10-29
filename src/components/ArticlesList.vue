@@ -10,7 +10,7 @@
         light
         bordered
         class="bg-white-700 h-[475px] w-[285px] rounded-[30px] flex relative cursor-pointer"
-        v-for="(article, i) in limitedArticles"
+        v-for="(article, i) in randomArticles"
         :key="i"
         @click="router.push('./article/' + article.title)"
       >
@@ -39,26 +39,50 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import useOikosProjects from "src/composables/useOikosProjects";
+import { ref, computed, onMounted, watch } from "vue";
+import useOikosArticles from "src/composables/useOikosArticles";
+import { useRouter } from "vue-router";
 
-const { projects } = useOikosProjects();
+const router = useRouter();
 
-const shuffledProjects = [...projects].sort(() => Math.random() - 0.5);
+const { articles } = useOikosArticles();
 
-// Initialize the result array
-const allArticles = [];
+// Create a flag to check if projects are loaded
+const isArticlesPopulated = ref(false);
 
-for (const project of shuffledProjects) {
-  // Concatenate the project's articles with the result
-  allArticles.push(...project.articles);
+// Watch the projects data and set the flag when it's populated
+watch(articles, () => {
+  isArticlesPopulated.value = true;
+});
 
-  // Check if the result array has reached the desired size (e.g., 20)
-  if (allArticles.length >= 20) {
-    break;
-  }
+const randomArticles = ref([]);
+
+onMounted(() => {
+  // Watch for changes in the articles data
+  watch(isArticlesPopulated, async (newVal) => {
+    if (newVal) {
+      await loadRandomArticles();
+    }
+  });
+});
+
+async function loadRandomArticles() {
+  console.log();
+  const randomIndexes = generateRandomIndexes(articles.value.length);
+
+  // Sort articles by the random indexes
+  randomArticles.value = randomIndexes
+    .map((index) => articles.value[index])
+    .slice(0, 20);
 }
 
-// Slice the result array to the fixed size (e.g., 20)
-const limitedArticles = allArticles.slice(0, 20);
+// Function to generate random indexes
+function generateRandomIndexes(arrayLength) {
+  const indexes = Array.from({ length: arrayLength }, (_, i) => i);
+  for (let i = indexes.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
+  }
+  return indexes;
+}
 </script>

@@ -1,5 +1,6 @@
 <template>
-  <div class="mb-[60px] relative">
+  <div v-if="loading">Loading...</div>
+  <div class="mb-[60px] relative" v-else>
     <img :src="current.photo" class="w-[100vw] max-h-[550px] object-cover" />
     <div
       class="absolute top-5 left-10 font-bold uppercase text-white text-[30px]"
@@ -64,9 +65,12 @@
 </template>
 
 <script setup>
-import useCycleFeaturedProjects from "src/composables/useCycleFeaturedProjects";
+import useFeatured from "src/composables/useFeatured";
+
 import { useRouter } from "vue-router";
 const router = useRouter();
 
-const { current } = useCycleFeaturedProjects();
+const { current } = useFeatured();
+
+const { loading } = useFeatured();
 </script>

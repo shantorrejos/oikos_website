@@ -11,6 +11,9 @@
 
 <script setup>
 import ProjectsFeatured from "src/components/ProjectsFeatured.vue";
+import useFeatured from "src/composables/useFeatured";
 import ProjectsList from "src/components/ProjectsList.vue";
 import ArticlesList from "src/components/ArticlesList.vue";
+
+const { loading } = useFeatured();
 </script>

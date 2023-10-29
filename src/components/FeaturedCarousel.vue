@@ -53,7 +53,6 @@
 
               <q-btn
                 v-if="item.name"
-                @click="logx(item.name)"
                 flat
                 rounded
                 class="bg-element-purpink text-white font-bold text-[14px] px-12 w-50"
@@ -104,7 +103,4 @@ const props = defineProps({
 });
 const router = useRouter();
 const slideModel = ref(0);
-const logx = (x) => {
-  console.log(x);
-};
 </script>

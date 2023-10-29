@@ -33,40 +33,26 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useRoute, useRouter } from "vue-router";
 import useOikosProjects from "src/composables/useOikosProjects";
 
-export default {
-  setup() {
-    const router = useRouter();
+const router = useRouter();
 
-    const route = useRoute();
-    const { projects } = useOikosProjects();
-    const articleNameToFind = route.params.title;
+const route = useRoute();
+const { projects } = useOikosProjects();
+const articleNameToFind = route.params.title;
 
-    const articleProject = projects.find((project) => {
-      // Check if the project contains an article with the matching name
-      return project.articles.some(
-        (article) => article.title === articleNameToFind
-      );
-    });
+const articleProject = projects.value.find((project) => {
+  // Check if the project contains an article with the matching name
+  return project.articles.some(
+    (article) => article.title === articleNameToFind
+  );
+});
 
-    const article = projects
-      .map((project) =>
-        project.articles.find((article) => article.title === articleNameToFind)
-      )
-      .filter((article) => article)[0];
-
-    console.log(articleProject.name);
-
-    return {
-      route,
-      router,
-      articleProject,
-      articleNameToFind,
-      article,
-    };
-  },
-};
+const article = projects.value
+  .map((project) =>
+    project.articles.find((article) => article.title === articleNameToFind)
+  )
+  .filter((article) => article)[0];
 </script>

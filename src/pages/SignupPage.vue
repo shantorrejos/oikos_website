@@ -11,16 +11,16 @@
   <div class="flex flex-col items-center mt-10">
     <q-input
       outlined
-      v-model="username"
+      v-model="email"
       label="EMAIL ADDRESS"
       class="w-[550px] m-3"
     ></q-input>
-    <q-input
+    <!-- <q-input
       outlined
       v-model="phonenumber"
       label="PHONE NUMBER"
       class="w-[550px] m-3"
-    ></q-input>
+    ></q-input> -->
     <q-input
       outlined
       v-model="password"
@@ -29,7 +29,7 @@
     ></q-input>
     <q-btn
       flat
-      @click="router.push('/signup')"
+      @click="register"
       class="bg-element-b39pink text-white font-bold text-[20px] w-[200px] h-fit rounded-[40px] p-0 mb-20 mt-5"
     >
       NEXT
@@ -37,17 +37,24 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-export default {
-  setup() {
-    const router = useRouter();
-    return {
-      username: ref(""),
-      password: ref(""),
-      router,
-    };
-  },
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+const router = useRouter();
+
+const email = ref("");
+const password = ref("");
+const register = () => {
+  createUserWithEmailAndPassword(getAuth(), email.value, password.value)
+    .then((data) => {
+      console.log("Registered");
+      router.push("/");
+    })
+    .catch((error) => {
+      console.error(error.code);
+      alert(error.message);
+    });
 };
 </script>
