@@ -12,6 +12,7 @@
     ></q-input>
     <q-input
       outlined
+      type="password"
       v-model="password"
       label="PASSWORD"
       class="w-[550px] m-3"

@@ -1,76 +1,84 @@
-import { ref, onMounted, computed, watch, onUnmounted } from "vue";
+import { ref, onUnmounted } from "vue";
 import db from "src/components/firebaseInit";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 
-const getFeaturedData = () => {
-  const engage = ref(null);
-  const featuredProjects = ref([]);
-  const featuredArticles = ref([]);
-  const shout = ref(null);
-  const loading = ref(true); // Loading indicator
-  let i = ref(0);
-  const current = computed(() => featuredProjects.value[i.value]);
-  let intervalId;
-  let isIntervalRunning = false;
+// Define refs for your data properties
+let featured = ref([]);
+let featuredArticles = ref([]);
+let featuredProjects = ref([]);
+let engage = ref("");
+let shout = ref("");
 
-  const runIntervalCode = (i, featuredProjects) => {
-    setInterval(function () {
-      i.value = (i.value + 1) % featuredProjects.value.length;
-    }, 5000);
-  };
+// Create a function to fetch and update featured data
+const fetchFeaturedData = () => {
+  // Fetch featured data from Firestore
+  const featuredRef = doc(db, "featured", "DcOlSVkzU673D4Zp9Vjv"); // Replace "your-featured-doc-id" with the actual document ID for your featured data
+  onSnapshot(featuredRef, (snapshot) => {
+    const data = snapshot.data();
+    if (data) {
+      // Update the refs with the fetched data
+      featured.value = data.featuredArticles;
+      featuredArticles.value = data.featuredArticles.map((docID) => ({
+        id: docID,
+      }));
+      featuredProjects.value = data.featuredProjects.map((docID) => ({
+        id: docID,
+      }));
+      engage.value = data.engage;
+      shout.value = data.shout;
 
-  onMounted(async () => {
-    try {
-      if (!loading.value) {
-        return; // Data is already loaded, no need to reload it.
-      }
-      const docRef = doc(db, "featured", "DcOlSVkzU673D4Zp9Vjv");
-      const doc_ = await getDoc(docRef);
-      const data = doc_.data();
-
-      engage.value = data.engage || null;
-      shout.value = data.shout || null;
-
-      const projectPromises = data.featuredProjects.map(async (projectId) => {
-        const projectRef = doc(db, "projects", projectId);
-        const projectDoc = await getDoc(projectRef);
-        return projectDoc.data();
-      });
-      featuredProjects.value = await Promise.all(projectPromises);
-
-      const articlePromises = data.featuredArticles.map(async (articleId) => {
-        const articleRef = doc(db, "articles", articleId);
-        const articleDoc = await getDoc(articleRef);
-        return articleDoc.data();
-      });
-      featuredArticles.value = await Promise.all(articlePromises);
-
-      if (!isIntervalRunning) {
-        intervalId = runIntervalCode(i, featuredProjects);
-        isIntervalRunning = true;
-      }
-
-      console.log(featuredArticles.value);
-      loading.value = false;
-
-      intervalId = runIntervalCode(i, featuredProjects);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      loading.value = false;
+      populateFeaturedData();
     }
   });
-
-  onUnmounted(() => {
-    clearInterval(intervalId);
-  });
-  return {
-    engage,
-    featuredProjects,
-    featuredArticles,
-    shout,
-    loading,
-    current,
-  };
 };
 
-export default getFeaturedData;
+// Define a function to fetch a document by its ID from a collection
+const fetchDocumentByID = async (collectionName, docID) => {
+  const docRef = doc(db, collectionName, docID);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return {
+      id: docSnap.id,
+      ...docSnap.data(),
+    };
+  } else {
+    return null;
+  }
+};
+
+// Create a function to populate featuredArticles and featuredProjects
+const populateFeaturedData = async () => {
+  const featuredArticlesData = await Promise.all(
+    featuredArticles.value.map(async (article) => {
+      return await fetchDocumentByID("articles", article.id);
+    })
+  );
+  const featuredProjectsData = await Promise.all(
+    featuredProjects.value.map(async (project) => {
+      return await fetchDocumentByID("projects", project.id);
+    })
+  );
+  // Update the refs with the fetched data
+  featuredArticles.value = featuredArticlesData.filter((article) => article);
+  featuredProjects.value = featuredProjectsData.filter((project) => project);
+};
+
+export default () => {
+  // Fetch and update featured data
+  fetchFeaturedData();
+
+  // Return your data properties
+  return {
+    featured,
+    featuredArticles,
+    featuredProjects,
+    engage,
+    shout,
+  };
+};

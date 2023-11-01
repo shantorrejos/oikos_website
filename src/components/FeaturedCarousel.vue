@@ -101,6 +101,7 @@ import { useRouter } from "vue-router";
 const props = defineProps({
   items: Array,
 });
+
 const router = useRouter();
 const slideModel = ref(0);
 </script>

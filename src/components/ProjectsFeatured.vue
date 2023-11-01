@@ -1,7 +1,6 @@
 <template>
-  <div v-if="loading">Loading...</div>
-  <div class="mb-[60px] relative" v-else>
-    <img :src="current.photo" class="w-[100vw] max-h-[550px] object-cover" />
+  <div class="mb-[60px] relative">
+    <img :src="current?.photo" class="w-[100vw] max-h-[550px] object-cover" />
     <div
       class="absolute top-5 left-10 font-bold uppercase text-white text-[30px]"
     >
@@ -12,14 +11,14 @@
       <div class="bg-white-600 h-[180px] w-[60vw]">
         <q-linear-progress
           size="16px"
-          :value="current.progress"
+          :value="current?.progress"
           color="secondary"
           class="mt-[35px] w-[1000px] rounded-[100px] mx-auto"
         />
 
         <div class="flex w-[1000px] mx-auto">
           <div class="text-[40px] text-element-purple">
-            {{ (current.progress * 100).toFixed(0) }}%
+            {{ (current?.progress * 100).toFixed(0) }}%
           </div>
           <div
             class="flex flex-col leading-none mt-[12px] ml-[10px] text-element-purpink"
@@ -40,13 +39,13 @@
           <p
             class="font-bold text-[50px] w-[300px] leading-none text-element-purple capitalize"
           >
-            {{ current.name }}
+            {{ current?.name }}
           </p>
           <p class="font-light text-[16px] text-element-purpink">
-            {{ current.tags.join(", ") }}
+            {{ current?.tags.join(", ") }}
           </p>
           <p class="mt-[20px] font-light text-[18px]">
-            {{ current.description }}
+            {{ current?.description }}
           </p>
           <div class="mt-[20px] flex justify-between items-center">
             <p class="text-slate-300">icons here</p>
@@ -66,11 +65,30 @@
 
 <script setup>
 import useFeatured from "src/composables/useFeatured";
+import { onBeforeUnmount, ref, computed, onMounted, watch } from "vue";
 
-import { useRouter } from "vue-router";
-const router = useRouter();
+const { featuredProjects } = useFeatured();
+let i = ref(0);
+let intervalId = ref(null); // Store the interval ID
 
-const { current } = useFeatured();
+const current = computed(() => featuredProjects.value[i.value]);
+console.log("true");
+// Start the interval when the component is mounted
 
-const { loading } = useFeatured();
+watch(featuredProjects, () => {
+  if (featuredProjects.value.length > 0) {
+    if (!intervalId.value) {
+      intervalId.value = setInterval(function () {
+        i.value = (i.value + 1) % featuredProjects.value.length;
+      }, 6000);
+    }
+  }
+});
+
+// Clear the interval when the component is unmounted
+onBeforeUnmount(() => {
+  if (intervalId.value) {
+    clearInterval(intervalId);
+  }
+});
 </script>

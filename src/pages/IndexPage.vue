@@ -67,12 +67,10 @@
     <!-- projects carousel  -->
 
     <div>
-      <div v-if="loading">Loading...</div>
-      <div v-else>
-        <featured-carousel :items="featuredProjects">
-          <template #default
-        /></featured-carousel>
-      </div>
+      <div @click="printit" class="cursor-pointer">lol</div>
+      <featured-carousel :items="featuredProjects">
+        <template #default
+      /></featured-carousel>
     </div>
 
     <!-- Articles label -->
@@ -94,6 +92,8 @@
         /></featured-carousel>
       </div>
     </div>
+
+    <!-- test -->
   </div>
 </template>
 
@@ -106,6 +106,7 @@ import IndexAnnouncement from "src/components/IndexAnnouncements.vue";
 import LabelHead from "src/components/LabelHead.vue";
 import ShoutCarousel from "src/components/ShoutCarousel.vue";
 import FeaturedCarousel from "src/components/FeaturedCarousel.vue";
+import { ref, watch } from "vue";
 
 // const { engage } = useFeatured();
 
@@ -114,4 +115,8 @@ const { loading } = useFeatured();
 const { featuredProjects } = useFeatured();
 const { featuredArticles } = useFeatured();
 const { shout } = useFeatured();
+
+const printit = () => {
+  console.log(featuredProjects.value);
+};
 </script>

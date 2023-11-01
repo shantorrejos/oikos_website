@@ -36,8 +36,16 @@ const routes = [
         component: () => import("pages/TestFeatured.vue"),
       },
       {
-        path: "userprofile",
+        path: "userprofile/:userID",
         component: () => import("pages/UserProfilePage.vue"),
+      },
+      {
+        path: "volunteerpage",
+        component: () => import("pages/VolunteerPage.vue"),
+      },
+      {
+        path: "donatepage",
+        component: () => import("pages/DonatePage.vue"),
       },
     ],
   },

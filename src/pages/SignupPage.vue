@@ -15,12 +15,12 @@
       label="EMAIL ADDRESS"
       class="w-[550px] m-3"
     ></q-input>
-    <!-- <q-input
+    <q-input
       outlined
-      v-model="phonenumber"
-      label="PHONE NUMBER"
+      v-model="username"
+      label="USERNAME"
       class="w-[550px] m-3"
-    ></q-input> -->
+    ></q-input>
     <q-input
       outlined
       v-model="password"
@@ -41,20 +41,71 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getFirestore,
+  collection,
+  doc,
+  setDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import { faker } from "@faker-js/faker";
 
 const router = useRouter();
 
 const email = ref("");
 const password = ref("");
-const register = () => {
-  createUserWithEmailAndPassword(getAuth(), email.value, password.value)
-    .then((data) => {
-      console.log("Registered");
-      router.push("/");
-    })
-    .catch((error) => {
-      console.error(error.code);
-      alert(error.message);
-    });
+const username = ref("");
+const firestore = getFirestore(); // Create a reference to the Firestore database
+const usersCollection = collection(firestore, "users");
+
+const isUsernameUnique = async (proposedUsername) => {
+  const q = query(usersCollection, where("username", "==", proposedUsername));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.size === 0;
+};
+const register = async () => {
+  try {
+    const isUnique = await isUsernameUnique(username.value);
+    if (!isUnique) {
+      alert("Username is already in use. Please choose another one.");
+      return;
+    }
+
+    const auth = getAuth();
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    );
+
+    const user = userCredential.user;
+
+    // Create a user profile document in Firestore with default values
+    const userProfile = {
+      gender: "",
+      bio: "",
+      username: username.value,
+      contactInfo: {
+        email: email.value,
+        phone: "",
+      },
+      birthday: "",
+      followedProjects: [],
+      volunteeredProjects: [],
+      location: "",
+    };
+
+    const userProfileRef = doc(usersCollection, user.uid);
+    await setDoc(userProfileRef, userProfile);
+
+    alert("Username is already in use. Please choose another one.");
+
+    router.push("/");
+  } catch (error) {
+    console.error(error.code);
+    alert(error.message);
+  }
 };
 </script>

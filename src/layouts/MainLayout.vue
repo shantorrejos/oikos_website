@@ -21,8 +21,16 @@
             class="mx-8 capitalize"
           />
           <q-route-tab to="/page2" label="Community" class="mx-8 capitalize" />
-          <q-route-tab to="/page3" label="Donate" class="mx-8 capitalize" />
-          <q-route-tab to="/page4" label="Volunteer" class="mx-8 capitalize" />
+          <q-route-tab
+            to="/donatepage"
+            label="Donate"
+            class="mx-8 capitalize"
+          />
+          <q-route-tab
+            to="/volunteerpage"
+            label="Volunteer"
+            class="mx-8 capitalize"
+          />
         </q-tabs>
       </div>
 
@@ -33,15 +41,35 @@
         >
           Search
         </q-btn>
+        <!-- TODO: CHANGE CLICK -->
 
-        <q-btn
-          v-if="isAuthenticated"
-          flat
-          class="w-32 h-12 shadow-none text-nav font-bold text-element-purple"
-          @click="$router.push('/userprofile')"
-        >
-          USER PROFILE
-        </q-btn>
+        <div v-if="isAuthenticated">
+          <!-- btn here -->
+          <q-btn
+            flat
+            class="w-32 h-12 shadow-none text-nav font-bold text-element-purple"
+            @click="toggleUserDropdown"
+          >
+            USER
+          </q-btn>
+          <!-- the div below needs an animation as if its a dropdown menu -->
+
+          <div
+            class="absolute flex flex-col bg-white shadow-lg w-[180px] rounded-[20px] right-10 items-start text-[15px] gap-y-2 p-5 pb-10 text-element-purple"
+            v-show="isOpen"
+          >
+            <div @click="pushToRouter('userprofile')" class="cursor-pointer">
+              Profile
+            </div>
+            <div @click="$router.push('/')" class="cursor-pointer">
+              Notifications
+            </div>
+            <div @click="$router.push('/')" class="cursor-pointer">
+              Manage Account
+            </div>
+            <div @click="handleSignOut" class="cursor-pointer">Log Out</div>
+          </div>
+        </div>
 
         <q-btn
           v-else
@@ -153,20 +181,56 @@
 </template>
 
 <script setup>
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { onMounted, ref, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+
+const router = useRouter();
 
 const auth = getAuth();
 const isAuthenticated = ref(false);
+const isOpen = ref(false);
+const userProfile = ref(null); // Store the user profile document
 
 onMounted(() => {
-  const unsubscribe = onAuthStateChanged(auth, (user) => {
+  const unsubscribe = onAuthStateChanged(auth, async (user) => {
     isAuthenticated.value = !!user;
+
+    if (user) {
+      // Fetch the user profile document using the user's UID
+      const firestore = getFirestore();
+      const userProfileRef = doc(firestore, "users", user.uid);
+      const userProfileDoc = await getDoc(userProfileRef);
+
+      if (userProfileDoc.exists()) {
+        userProfile.value = userProfileDoc.data();
+      }
+    } else {
+      userProfile.value = null; // Reset user profile when not authenticated
+    }
   });
 
   // Make sure to unsubscribe when the component is unmounted
   onUnmounted(unsubscribe);
 });
+
+const toggleUserDropdown = () => {
+  isOpen.value = !isOpen.value;
+};
+
+const handleSignOut = () => {
+  signOut(auth).then(() => {
+    isOpen.value = !isOpen.value;
+    router.push("/");
+  });
+};
+
+const pushToRouter = (path) => {
+  isOpen.value = !isOpen.value;
+  console.log(userProfile.value.username);
+  router.push("/" + path + "/" + userProfile.value.username);
+};
 </script>
 
 <!-- bot is sign out lol xd -->
