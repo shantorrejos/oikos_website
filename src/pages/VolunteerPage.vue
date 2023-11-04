@@ -42,14 +42,19 @@
       <div class="flex flex-nowrap justify-between gap-10 mb-10">
         <q-input
           outlined
-          v-model="text"
+          v-model="firstName"
           label="FIRST NAME"
           class="min-w-[650px] flex-grow"
         />
-        <q-input outlined v-model="text" label="M.I" class="w-[100px]" />
         <q-input
           outlined
-          v-model="text"
+          v-model="middleInitial"
+          label="M.I"
+          class="w-[100px]"
+        />
+        <q-input
+          outlined
+          v-model="lastName"
           label="LAST NAME"
           class="min-w-[450px] flex-grow"
         />
@@ -62,12 +67,24 @@
         <div class="bg-element-b39pink h-[3px] flex-grow ml-[50px]"></div>
       </div>
       <div class="flex flex-nowrap justify-between gap-10 mb-10">
-        <q-input
-          outlined
-          v-model="text"
-          label="PROJECT NAME"
-          class="w-[650px]"
-        />
+        <q-btn-dropdown
+          label="Select Project to Volunteer"
+          class="w-[500px] text-element-purple text-[18px] p-0"
+        >
+          <q-list>
+            <q-item
+              clickable
+              v-close-popup
+              v-for="(project, i) in projects"
+              :key="i"
+              @click="onItemClick(project)"
+            >
+              <q-item-section>
+                <q-item-label>{{ project.name }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
       </div>
 
       <div
@@ -80,13 +97,13 @@
       <div class="flex flex-nowrap justify-between gap-10 mb-5">
         <q-input
           outlined
-          v-model="text"
+          v-model="emailAddress"
           label="EMAIL ADDRESS"
           class="flex-grow"
         />
         <q-input
           outlined
-          v-model="text"
+          v-model="contactNumber"
           label="CONTACT NUMBER"
           class="flex-grow"
         />
@@ -94,13 +111,13 @@
       <div class="flex flex-nowrap justify-between gap-10">
         <q-input
           outlined
-          v-model="text"
+          v-model="emergencyContactName"
           label="EMERGENCY CONTACT NAME"
           class="flex-grow"
         />
         <q-input
           outlined
-          v-model="text"
+          v-model="emergencyContactNumber"
           label="EMERGENCY CONTACT NUMBER"
           class="flex-grow"
         />
@@ -120,9 +137,25 @@
 <script setup>
 import { watch, ref } from "vue";
 import useFeatured from "src/composables/useFeatured";
+import useOikosProjects from "src/composables/useOikosProjects";
 
+const { projects } = useOikosProjects();
 const { featuredProjects } = useFeatured();
 const isLoading = ref(true);
+
+const slide = ref(0);
+const firstName = ref("");
+const middleInitial = ref("");
+const lastName = ref("");
+const emailAddress = ref("");
+const contactNumber = ref("");
+const emergencyContactName = ref("");
+const emergencyContactNumber = ref("");
+const dropdownLabel = ref("Select Project to Volunteer");
+
+const onItemClick = (project) => {
+  console.log(project);
+};
 
 watch(featuredProjects, () => {
   if (featuredProjects.value.length > 0) {
@@ -130,5 +163,12 @@ watch(featuredProjects, () => {
   }
 });
 
-const slide = ref(0);
+// TODO: Create an onItemClick function that takes the projectID of the selected
+// TODO: Create a submit function that takes all data above and adds a volunteerApplications document
+// TODO:
+// TODO:
+// TODO:
+// TODO:
+// TODO:
+// TODO:
 </script>

@@ -36,7 +36,7 @@ const routes = [
         component: () => import("pages/TestFeatured.vue"),
       },
       {
-        path: "userprofile/:userID",
+        path: "userprofile/:userId",
         component: () => import("pages/UserProfilePage.vue"),
       },
       {

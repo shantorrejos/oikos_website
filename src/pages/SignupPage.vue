@@ -95,6 +95,7 @@ const register = async () => {
       followedProjects: [],
       volunteeredProjects: [],
       location: "",
+      profilePhoto: "",
     };
 
     const userProfileRef = doc(usersCollection, user.uid);

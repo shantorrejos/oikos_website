@@ -1,5 +1,6 @@
 <template>
-  <div class="mb-[60px] relative">
+  <div v-if="isLoading">Loading...</div>
+  <div v-else class="mb-[60px] relative">
     <img :src="current?.photo" class="w-[100vw] max-h-[550px] object-cover" />
     <div
       class="absolute top-5 left-10 font-bold uppercase text-white text-[30px]"
@@ -41,7 +42,10 @@
           >
             {{ current?.name }}
           </p>
-          <p class="font-light text-[16px] text-element-purpink">
+          <p
+            v-if="current.tags"
+            class="font-light text-[16px] text-element-purpink"
+          >
             {{ current?.tags.join(", ") }}
           </p>
           <p class="mt-[20px] font-light text-[18px]">
@@ -66,13 +70,15 @@
 <script setup>
 import useFeatured from "src/composables/useFeatured";
 import { onBeforeUnmount, ref, computed, onMounted, watch } from "vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const { featuredProjects } = useFeatured();
 let i = ref(0);
 let intervalId = ref(null); // Store the interval ID
 
 const current = computed(() => featuredProjects.value[i.value]);
-console.log("true");
+const isLoading = ref(true);
 // Start the interval when the component is mounted
 
 watch(featuredProjects, () => {
@@ -81,7 +87,9 @@ watch(featuredProjects, () => {
       intervalId.value = setInterval(function () {
         i.value = (i.value + 1) % featuredProjects.value.length;
       }, 6000);
+      console.log("i made it after interval");
     }
+    isLoading.value = false;
   }
 });
 

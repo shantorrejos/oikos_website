@@ -1,5 +1,21 @@
 <template>
   <div class="flex flex-col items-center">
+    <div class="mb-3 mt-8 w-[90vw] flex justify-end">
+      <div
+        v-if="!isProjectFollowed"
+        @click="toggleFollowProject"
+        class="border-[2px] border-element-purpink py-1 px-5 rounded-[40px] w-fit text-element-purple cursor-pointer hover:bg-element-purpink hover:text-white"
+      >
+        + FOLLOW PROJECT
+      </div>
+      <div
+        v-else
+        @click="toggleFollowProject"
+        class="border-[2px] bg-element-purpink border-element-purpink py-1 px-5 rounded-[40px] w-fit text-white cursor-pointer hover:bg-element-purpink hover:text-white"
+      >
+        ✔ PROJECT FOLLOWED!
+      </div>
+    </div>
     <img
       v-bind:src="activeProject.photo"
       class="w-[90vw] h-[450px] object-cover object-center"
@@ -299,69 +315,155 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useRoute, useRouter } from "vue-router";
 import useOikosProjects from "src/composables/useOikosProjects";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { computed, ref } from "vue";
+import { onAuthStateChanged, getAuth } from "firebase/auth"; // Import Firebase Authentication method
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
-export default {
-  setup() {
-    const route = useRoute();
-    const router = useRouter();
-    const { projects } = useOikosProjects();
+const route = useRoute();
+const router = useRouter();
+const { projects } = useOikosProjects();
+const isFollowed = ref(false);
+const userId = ref(null); // New variable to store the user ID
+const userDocument = ref(null); // To store the user's Firestore document
 
-    const activeProject = projects.value.find(
-      (Object) => Object.name === route.params.name
-    );
+// Define a ref to hold the user's authentication state
+const isAuthenticated = ref(false);
 
-    const sortedProjectUpdates = computed(() => {
-      return activeProject.projectUpdatesList.slice().sort((a, b) => {
-        // Sort in descending order by comparing the months
-        return b.month.localeCompare(a.month);
-      });
-    });
+// Initialize Firebase authentication
+const auth = getAuth(); // You may need to import getAuth from your Firebase setup
 
-    const downloadContent = function (i) {
-      const dlcObject = activeProject.dlcList[i]; // Access the object at index i from dlcList
-      if (dlcObject && dlcObject.content) {
-        const content = dlcObject.content;
-        const blob = new Blob([content], {
-          type: "application/octet-stream",
-        });
-        const url = URL.createObjectURL(blob);
+// Add a listener to check if the user is authenticated
+onAuthStateChanged(auth, (user) => {
+  isAuthenticated.value = !!user;
+  console.log(isAuthenticated.value);
+});
 
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "downloadedFile.txt"; // Specify the filename
-        a.style.display = "none";
+onMounted(() => {
+  const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    isAuthenticated.value = !!user;
+    if (user) {
+      userId.value = user.uid; // Update the user ID when the user is authenticated
+      console.log("yahoo!");
+      // Fetch the user's document from Firestore
+      const firestore = getFirestore();
+      const userDocRef = doc(firestore, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
 
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url); // Clean up
+      if (userDocSnap.exists()) {
+        userDocument.value = userDocSnap.data(); // Store the user's document data
       } else {
-        console.error("Invalid dlcList object or content is missing.");
+        userDocument.value = null; // Handle the case where the document doesn't exist
       }
-    };
+    } else {
+      userId.value = null; // Set the user ID to null when the user is not authenticated
+      userDocument.value = null; // Clear the user document when not authenticated
+    }
+  });
 
-    const completeTags = computed(() => {
-      return activeProject.tags.concat(activeProject.hashtags);
+  // Make sure to unsubscribe when the component is unmounted
+  onUnmounted(unsubscribe);
+});
+
+const activeProject = computed(() => {
+  return projects.value.find((project) => project.name === route.params.name);
+});
+
+const sortedProjectUpdates = computed(() => {
+  return activeProject.value
+    ? activeProject.value.projectUpdatesList.slice().sort((a, b) => {
+        return b.month.localeCompare(a.month);
+      })
+    : [];
+});
+
+const downloadContent = (i) => {
+  const dlcObject = activeProject.value.dlcList[i];
+  if (dlcObject && dlcObject.content) {
+    const content = dlcObject.content;
+    const blob = new Blob([content], {
+      type: "application/octet-stream",
     });
+    const url = URL.createObjectURL(blob);
 
-    console.log(completeTags);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "downloadedFile.txt";
+    a.style.display = "none";
 
-    return {
-      photoCarousel: ref(0),
-      videoCarousel: ref(0),
-      route,
-      router,
-      projects,
-      activeProject,
-      completeTags,
-      downloadContent,
-      sortedProjectUpdates,
-    };
-  },
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } else {
+    console.error("Invalid dlcList object or content is missing.");
+  }
 };
+
+const completeTags = computed(() => {
+  return activeProject.value
+    ? activeProject.value.tags.concat(activeProject.value.hashtags)
+    : [];
+});
+
+const isProjectFollowed = computed(() => {
+  if (!isAuthenticated.value || !userDocument.value) {
+    // If not authenticated or userDocument is not available, return false
+    return false;
+  }
+
+  const userData = userDocument.value;
+  const followedProjects = userData.followedProjects || [];
+  return followedProjects.includes(activeProject.value.id);
+});
+
+const toggleFollowProject = async () => {
+  if (!isAuthenticated.value) {
+    // Handle the case when the user is not authenticated
+    console.error("User is not authenticated. Please log in.");
+    return;
+  }
+
+  const firestore = getFirestore();
+  const userDocRef = doc(firestore, "users", userId.value);
+
+  try {
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists()) {
+      const userData = userDocSnap.data();
+      if (!userData.followedProjects) {
+        userData.followedProjects = []; // Initialize the followedProjects array if it doesn't exist
+      }
+
+      const projectId = activeProject.value.id;
+      const isFollowing = userData.followedProjects.includes(projectId);
+
+      if (isFollowing) {
+        // If the project is already followed, unfollow it
+        userData.followedProjects = userData.followedProjects.filter(
+          (id) => id !== projectId
+        );
+      } else {
+        // If the project is not followed, follow it
+        userData.followedProjects.push(projectId);
+      }
+
+      // Update the user document in Firestore with the new followedProjects array
+      await setDoc(userDocRef, userData, { merge: true });
+
+      // Optionally, you can also update the userDocument locally
+      userDocument.value = userData;
+    } else {
+      console.error("User document not found in Firestore.");
+    }
+  } catch (error) {
+    console.error("Error toggling follow/unfollow:", error);
+  }
+};
+const photoCarousel = ref(0);
+const videoCarousel = ref(0);
 </script>

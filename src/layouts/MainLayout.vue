@@ -45,29 +45,42 @@
 
         <div v-if="isAuthenticated">
           <!-- btn here -->
-          <q-btn
-            flat
-            class="w-32 h-12 shadow-none text-nav font-bold text-element-purple"
+          <img
+            v-if="userDocument.profilePhoto"
+            v-bind:src="userDocument.profilePhoto"
+            class="h-12 w-fit rounded-[360px] cursor-pointer"
             @click="toggleUserDropdown"
-          >
-            USER
-          </q-btn>
+          />
           <!-- the div below needs an animation as if its a dropdown menu -->
 
           <div
-            class="absolute flex flex-col bg-white shadow-lg w-[180px] rounded-[20px] right-10 items-start text-[15px] gap-y-2 p-5 pb-10 text-element-purple"
+            class="absolute flex flex-col bg-white shadow-inner w-[180px] rounded-[20px] top-24 right-4 items-start text-[15px] gap-y-2 pt-5 pb-10 text-element-purple"
             v-show="isOpen"
           >
-            <div @click="pushToRouter('userprofile')" class="cursor-pointer">
+            <div
+              @click="pushToRouter('userprofile')"
+              class="cursor-pointer w-full hover:bg-slate-100 pl-5"
+            >
               Profile
             </div>
-            <div @click="$router.push('/')" class="cursor-pointer">
+            <div
+              @click="$router.push('/')"
+              class="cursor-pointer w-full hover:bg-slate-100 pl-5"
+            >
               Notifications
             </div>
-            <div @click="$router.push('/')" class="cursor-pointer">
+            <div
+              @click="$router.push('/')"
+              class="cursor-pointer w-full hover:bg-slate-100 pl-5"
+            >
               Manage Account
             </div>
-            <div @click="handleSignOut" class="cursor-pointer">Log Out</div>
+            <div
+              @click="handleSignOut"
+              class="cursor-pointer w-full hover:bg-slate-100 pl-5"
+            >
+              Log Out
+            </div>
           </div>
         </div>
 
@@ -184,30 +197,36 @@
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { onMounted, ref, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc } from "firebase/firestore"; // Import Firestore functions
 
 const router = useRouter();
 
 const auth = getAuth();
 const isAuthenticated = ref(false);
 const isOpen = ref(false);
-const userProfile = ref(null); // Store the user profile document
+const userId = ref(null); // New variable to store the user ID
+const userDocument = ref(null); // To store the user's Firestore document
 
 onMounted(() => {
   const unsubscribe = onAuthStateChanged(auth, async (user) => {
     isAuthenticated.value = !!user;
-
     if (user) {
-      // Fetch the user profile document using the user's UID
-      const firestore = getFirestore();
-      const userProfileRef = doc(firestore, "users", user.uid);
-      const userProfileDoc = await getDoc(userProfileRef);
+      userId.value = user.uid; // Update the user ID when the user is authenticated
 
-      if (userProfileDoc.exists()) {
-        userProfile.value = userProfileDoc.data();
+      // Fetch the user's document from Firestore
+      const firestore = getFirestore();
+      const userDocRef = doc(firestore, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        userDocument.value = userDocSnap.data(); // Store the user's document data
+        console.log(userDocument.value);
+      } else {
+        userDocument.value = null; // Handle the case where the document doesn't exist
       }
     } else {
-      userProfile.value = null; // Reset user profile when not authenticated
+      userId.value = null; // Set the user ID to null when the user is not authenticated
+      userDocument.value = null; // Clear the user document when not authenticated
     }
   });
 
@@ -227,9 +246,9 @@ const handleSignOut = () => {
 };
 
 const pushToRouter = (path) => {
+  router.push("/" + path + "/" + userId.value);
   isOpen.value = !isOpen.value;
-  console.log(userProfile.value.username);
-  router.push("/" + path + "/" + userProfile.value.username);
+  console.log(userId.value);
 };
 </script>
 
