@@ -1,84 +1,76 @@
-import { ref, onUnmounted } from "vue";
 import db from "src/components/firebaseInit";
+import { ref, computed, watch } from "vue";
+import { useCollection, useDocument } from "vuefire";
 import {
+  FieldPath,
   collection,
-  addDoc,
-  onSnapshot,
   doc,
-  getDoc,
+  documentId,
+  query,
+  where,
 } from "firebase/firestore";
 
-// Define refs for your data properties
-let featured = ref([]);
-let featuredArticles = ref([]);
-let featuredProjects = ref([]);
-let engage = ref("");
-let shout = ref("");
-
-// Create a function to fetch and update featured data
-const fetchFeaturedData = () => {
-  // Fetch featured data from Firestore
-  const featuredRef = doc(db, "featured", "DcOlSVkzU673D4Zp9Vjv"); // Replace "your-featured-doc-id" with the actual document ID for your featured data
-  onSnapshot(featuredRef, (snapshot) => {
-    const data = snapshot.data();
-    if (data) {
-      // Update the refs with the fetched data
-      featured.value = data.featuredArticles;
-      featuredArticles.value = data.featuredArticles.map((docID) => ({
-        id: docID,
-      }));
-      featuredProjects.value = data.featuredProjects.map((docID) => ({
-        id: docID,
-      }));
-      engage.value = data.engage;
-      shout.value = data.shout;
-
-      populateFeaturedData();
-    }
-  });
-};
-
-// Define a function to fetch a document by its ID from a collection
-const fetchDocumentByID = async (collectionName, docID) => {
-  const docRef = doc(db, collectionName, docID);
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    return {
-      id: docSnap.id,
-      ...docSnap.data(),
-    };
-  } else {
-    return null;
-  }
-};
-
-// Create a function to populate featuredArticles and featuredProjects
-const populateFeaturedData = async () => {
-  const featuredArticlesData = await Promise.all(
-    featuredArticles.value.map(async (article) => {
-      return await fetchDocumentByID("articles", article.id);
-    })
-  );
-  const featuredProjectsData = await Promise.all(
-    featuredProjects.value.map(async (project) => {
-      return await fetchDocumentByID("projects", project.id);
-    })
-  );
-  // Update the refs with the fetched data
-  featuredArticles.value = featuredArticlesData.filter((article) => article);
-  featuredProjects.value = featuredProjectsData.filter((project) => project);
-};
-
 export default () => {
-  // Fetch and update featured data
-  fetchFeaturedData();
+  const featuredRef = useDocument(
+    doc(collection(db, "featured"), "DcOlSVkzU673D4Zp9Vjv")
+  );
 
-  // Return your data properties
+  const featuredProjectsQuery = computed(() => {
+    if (!featuredRef.value) return;
+    return query(
+      collection(db, "projects"),
+      where(documentId(), "in", featuredRef.value?.featuredProjects)
+    );
+  });
+
+  const featuredProjects = useCollection(featuredProjectsQuery);
+
+  const featuredArticlesQuery = computed(() => {
+    if (!featuredRef.value) return;
+    return query(
+      collection(db, "articles"),
+      where(documentId(), "in", featuredRef.value?.featuredArticles)
+    );
+  });
+
+  const featuredArticles = useCollection(featuredArticlesQuery);
+
+  const engage = computed(() => {
+    if (!featuredRef.value) return;
+    return featuredRef.value.engage;
+  });
+
+  const shout = computed(() => {
+    if (!featuredRef.value) return;
+    return featuredRef.value.shout;
+  });
+
+  const aboutus = computed(() => {
+    if (!featuredRef.value) return;
+    return featuredRef.value.aboutus;
+  });
+
+  // const featuredProjects = computed(() => {
+  //   if (featuredRef.pending.value) return [];
+  //   const featuredProjectsData = featuredRef.value.featuredProjects;
+  //   return featuredProjectsData.map((id) =>
+  //     useDocument(doc(collection(db, "projects"), id))
+  //   );
+  // });
+
+  // const featuredArticles = computed(() => {
+  //   if (featuredRef.pending.value) return [];
+  //   const featuredArticlesData = featuredRef.value.featuredArticles;
+  //   return featuredArticlesData.map((id) =>
+  //     useDocument(doc(collection(db, "articles"), id))
+  //   );
+  // });
+
   return {
-    featured,
-    featuredArticles,
     featuredProjects,
+    featuredArticles,
     engage,
     shout,
+    aboutus,
   };
 };

@@ -77,7 +77,7 @@
               v-close-popup
               v-for="(project, i) in projects"
               :key="i"
-              @click="onItemClick(project)"
+              @click="setSelectedProject(project)"
             >
               <q-item-section>
                 <q-item-label>{{ project.name }}</q-item-label>
@@ -125,6 +125,7 @@
 
       <div class="flex justify-end">
         <q-btn
+          @click="submitApplicaiton"
           flat
           class="bg-element-purpink text-white font-bold text-[30px] px-12 w-[250px] mt-10 rounded-[200px]"
           >SUBMIT</q-btn
@@ -135,14 +136,21 @@
 </template>
 
 <script setup>
+import { onMounted } from "vue";
 import { watch, ref } from "vue";
 import useFeatured from "src/composables/useFeatured";
 import useOikosProjects from "src/composables/useOikosProjects";
+import { collection, addDoc, setDoc } from "firebase/firestore";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { useCollection } from "vuefire";
+import db from "src/components/firebaseInit";
 
 const { projects } = useOikosProjects();
 const { featuredProjects } = useFeatured();
 const isLoading = ref(true);
-
+const selectedProjectID = ref("");
+const selectedProjectName = ref("");
+const todos = useCollection(collection(db, "projects"));
 const slide = ref(0);
 const firstName = ref("");
 const middleInitial = ref("");
@@ -151,7 +159,8 @@ const emailAddress = ref("");
 const contactNumber = ref("");
 const emergencyContactName = ref("");
 const emergencyContactNumber = ref("");
-const dropdownLabel = ref("Select Project to Volunteer");
+const userID = ref("");
+let auth;
 
 const onItemClick = (project) => {
   console.log(project);
@@ -163,12 +172,47 @@ watch(featuredProjects, () => {
   }
 });
 
-// TODO: Create an onItemClick function that takes the projectID of the selected
-// TODO: Create a submit function that takes all data above and adds a volunteerApplications document
-// TODO:
-// TODO:
-// TODO:
-// TODO:
-// TODO:
-// TODO:
+onMounted(() => {
+  auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      userID.value = user.uid;
+    } else {
+      userID.value = "guest";
+    }
+  });
+});
+
+const submitApplicaiton = async () => {
+  try {
+    const volunteerApplicationRef = collection(db, "volunteerApplications");
+
+    const addApplication = {
+      firstName: firstName.value,
+      middleInitial: middleInitial.value,
+      lastName: lastName.value,
+      emailAddress: emailAddress.value,
+      contactNumber: contactNumber.value,
+      emergencyContactName: emergencyContactName.value,
+      emergencyContactNumber: emergencyContactNumber.value,
+      projectName: selectedProjectName.value,
+      projectId: selectedProjectID.value,
+      user: userID.value,
+    };
+    alert("Application Successfully Submitted!");
+
+    const docRef = await addDoc(volunteerApplicationRef, addApplication);
+  } catch (error) {
+    console.error("Error adding document: ", error);
+  }
+};
+
+const consolePrint = () => {
+  console.log(firstName.value);
+};
+
+const setSelectedProject = (x) => {
+  selectedProjectID.value = x.id;
+  selectedProjectName.value = x.name;
+};
 </script>

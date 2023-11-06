@@ -25,6 +25,19 @@
   right: 850px !important;
 }
 
+.fade-in {
+  transition: opacity 0.5s;
+  opacity: 0;
+}
+
+.fade-in.active {
+  opacity: 1;
+}
+
+.custom-input {
+  height: 2.5rem; /* Set the desired height */
+}
+
 // .q-card > img:last-child {
 //   border-bottom-left-radius: 0 !important;
 //   border-bottom-right-radius: 0 !important;

@@ -67,7 +67,6 @@
     <!-- projects carousel  -->
 
     <div>
-      <div @click="printit" class="cursor-pointer">lol</div>
       <featured-carousel :items="featuredProjects">
         <template #default
       /></featured-carousel>

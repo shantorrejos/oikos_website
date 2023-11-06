@@ -19,7 +19,7 @@
         <div class="flex justify-between p-0">
           <q-img
             class="flex-1 max-h-[330px] max-w-[600px]"
-            v-bind:src="item.photo"
+            v-bind:src="item?.photo"
           >
           </q-img>
 
@@ -27,15 +27,15 @@
             <p
               class="text-[50px] font-bold text-element-b39pink leading-none w-[400px] uppercase mb-[20px]"
             >
-              {{ item.title ? item.title : item.name }}
+              {{ item?.title ? item?.title : item?.name }}
             </p>
             <p class="text-[22px] font-thin text-element-24black mb-[20px]">
-              {{ item.description ? item.description : item.summary }}
+              {{ item?.description ? item?.description : item?.summary }}
             </p>
 
             <div style="display: flex; gap: 30px; margin-top: 10px">
               <q-btn
-                v-if="item.title"
+                v-if="item?.title"
                 @click="router.push('./article/' + item.title)"
                 flat
                 rounded
@@ -43,7 +43,7 @@
                 >View More</q-btn
               >
               <q-btn
-                v-if="item.name"
+                v-if="item?.name"
                 @click="router.push('/project/' + item.name)"
                 flat
                 rounded
@@ -52,7 +52,7 @@
               >
 
               <q-btn
-                v-if="item.name"
+                v-if="item?.name"
                 flat
                 rounded
                 class="bg-element-purpink text-white font-bold text-[14px] px-12 w-50"
@@ -101,6 +101,7 @@ import { useRouter } from "vue-router";
 const props = defineProps({
   items: Array,
 });
+console.log("hello world");
 
 const router = useRouter();
 const slideModel = ref(0);

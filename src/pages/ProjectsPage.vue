@@ -1,6 +1,6 @@
 <template>
   <!-- container for the top thing might be unnecessary-->
-  <projects-featured />
+  <projects-featured></projects-featured>
 
   <!-- container for the projects thing might-->
   <projects-list></projects-list>

@@ -57,9 +57,127 @@
       </q-tabs>
 
       <div
-        class="bg-white w-[800px] h-[800px] mt-10 mx-auto rounded-tl-[80px] rounded-br-[80px] p-20 overflow-y-auto"
+        class="bg-white h-[800px] w-[800px] mt-10 mx-auto rounded-tl-[80px] rounded-br-[80px] flex flex-col"
       >
-        hello <br />
+        <div
+          v-if="tab === 'mails'"
+          class="w-[670px] h-[670px] m-auto overflow-y-scroll flex gap-20"
+        >
+          <div
+            v-for="(project, i) in participatedProjects"
+            :key="i"
+            class="pr-2"
+          >
+            <div class="flex gap-10 flex-nowrap">
+              <img
+                v-bind:src="project.photo"
+                class="w-[250px] h-full object-cover"
+              />
+              <div class="flex flex-col">
+                <div class="flex justify-between items-center">
+                  <p
+                    class="text-[30px] font-bold text-element-purple uppercase"
+                  >
+                    {{ project?.name }}
+                  </p>
+                  <q-btn
+                    @click="router.push('/project/' + project.name)"
+                    flat
+                    rounded
+                    class="bg-element-purpink text-white font-bold text-[12px] px-4 w-fit"
+                    >VIEW
+                  </q-btn>
+                </div>
+
+                <p
+                  v-if="project.tags"
+                  class="font-light text-[16px] text-element-purpink"
+                >
+                  {{ project?.tags.join(", ") }}
+                </p>
+                <p class="font-light text-justify text-[13px]">
+                  {{ project.summary }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          v-if="tab === 'alarms'"
+          class="w-[550px] h-[670px] m-auto overflow-y-scroll flex gap-20"
+        >
+          <div
+            v-for="(project, i) in participatedProjects"
+            :key="i"
+            class="pr-2"
+          >
+            <div class="flex gap-10 flex-nowrap flex-shrink-0">
+              <div class="relative">
+                <img
+                  :src="project.photo"
+                  class="w-[400px] h-full object-cover"
+                />
+                <div
+                  class="w-full h-full bg-element-purpink top-0 opacity-70 absolute"
+                ></div>
+                <div
+                  class="absolute top-[40%] left-[43%] text-white text-[22px] font-bold"
+                >
+                  {{ (project.progress * 100).toFixed(0) }}%
+                </div>
+                <div class="absolute top-[55%] left-[30%]">
+                  <q-linear-progress
+                    size="5px"
+                    :value="project.progress"
+                    class="w-[100px] rounded-[100px] text-white bg-slate-400"
+                  />
+                </div>
+              </div>
+
+              <div class="flex flex-col w-[500px]">
+                <div class="flex justify-between items-center">
+                  <p
+                    class="text-[22px] font-bold text-element-purple uppercase"
+                  >
+                    {{ project?.name }}
+                  </p>
+                  <q-btn
+                    @click="router.push('/project/' + project.name)"
+                    flat
+                    rounded
+                    class="bg-element-purpink text-white font-bold text-[10px] px-4 w-fit"
+                    >SEE ALL UPDATES
+                  </q-btn>
+                </div>
+
+                <p
+                  v-if="project.tags"
+                  class="font-light text-[12px] text-element-purpink"
+                >
+                  {{ project?.tags.join(", ") }}
+                </p>
+                <p
+                  class="font-bold text-justify text-[16px] text-element-purple"
+                >
+                  {{ project.projectUpdatesList[0].month }}:
+                  {{ project.projectUpdatesList[0].content[0].title }} <br />
+                </p>
+
+                <ul class="list-disc pl-4 text-justify text-[13px]">
+                  <li
+                    v-for="(update, i) in project.projectUpdatesList[0]
+                      .content[0].updateList"
+                    :key="i"
+                    class="font-light"
+                  >
+                    {{ update }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -69,34 +187,33 @@
 import { onMounted, ref } from "vue";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter, useRoute } from "vue-router";
-import { getFirestore, doc, getDoc } from "firebase/firestore"; // Import Firestore related functions
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import db from "src/components/firebaseInit"; // Import Firestore related functions
 
 const router = useRouter();
 const route = useRoute();
 const isLoggedIn = ref(false);
 const tab = ref("mails");
+const participatedProjects = ref([]);
+const i = ref();
 
 const userIDToFind = route.params.userId;
 console.log(userIDToFind);
 
 let auth;
-let userDoc = ref(null); // To store the retrieved Firestore document
+let userDoc = ref(null);
 
 onMounted(() => {
   auth = getAuth();
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      // Initialize Firestore
-      const db = getFirestore();
-
-      // Reference to the user document with the specified userIDToFind
       const userRef = doc(db, "users", userIDToFind);
 
-      // Fetch the document
+      // fetch shit
       try {
         const userSnapshot = await getDoc(userRef);
         if (userSnapshot.exists()) {
-          userDoc.value = userSnapshot.data(); // Store the document data in userDoc
+          userDoc.value = userSnapshot.data();
         } else {
           console.log("User document not found");
         }
@@ -104,12 +221,54 @@ onMounted(() => {
         console.error("Error fetching user document:", error);
       }
 
+      fetchVolunteeredProjects();
+      console.log(participatedProjects.value);
       isLoggedIn.value = true;
     } else {
       router.push("/login");
     }
   });
 });
+
+const fetchVolunteeredProjects = () => {
+  const volunteeredRef = doc(db, "users", userIDToFind);
+  onSnapshot(volunteeredRef, (snapshot) => {
+    const data = snapshot.data();
+    if (data) {
+      participatedProjects.value = data.volunteeredProjects.map((docID) => ({
+        id: docID,
+      }));
+
+      console.log(participatedProjects.value);
+      populateVolunteered();
+    }
+  });
+};
+
+const fetchDocumentByID = async (collectionName, docID) => {
+  const docRef = doc(db, collectionName, docID);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return {
+      id: docSnap.id,
+      ...docSnap.data(),
+    };
+  } else {
+    return null;
+  }
+};
+
+const populateVolunteered = async () => {
+  const volunteeredProjectsData = await Promise.all(
+    participatedProjects.value.map(async (project) => {
+      return await fetchDocumentByID("projects", project.id);
+    })
+  );
+  participatedProjects.value = volunteeredProjectsData.filter(
+    (project) => project
+  );
+  console.log(participatedProjects.value);
+};
 
 const handleSignOut = () => {
   signOut(auth).then(() => {

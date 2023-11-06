@@ -47,6 +47,14 @@ const routes = [
         path: "donatepage",
         component: () => import("pages/DonatePage.vue"),
       },
+      {
+        path: "testvuefire",
+        component: () => import("pages/testVueFire.vue"),
+      },
+      {
+        path: "aboutus",
+        component: () => import("pages/AboutUsPage.vue"),
+      },
     ],
   },
 

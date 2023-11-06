@@ -46,8 +46,7 @@
         <div v-if="isAuthenticated">
           <!-- btn here -->
           <img
-            v-if="userDocument.profilePhoto"
-            v-bind:src="userDocument.profilePhoto"
+            v-bind:src="userDocument?.profilePhoto"
             class="h-12 w-fit rounded-[360px] cursor-pointer"
             @click="toggleUserDropdown"
           />
@@ -81,6 +80,42 @@
             >
               Log Out
             </div>
+
+            <q-dialog v-model="willconfirm">
+              <q-card>
+                <q-card-section>
+                  <div class="text-h6">First dialog</div>
+                </q-card-section>
+                <q-card-section class="row items-center q-gutter-sm">
+                  <q-btn
+                    label="Open dialog"
+                    color="primary"
+                    @click="dialog2 = true"
+                  />
+                  <q-btn v-close-popup label="Close" color="primary" />
+
+                  <q-dialog v-model="dialog2">
+                    <q-card>
+                      <q-card-section>
+                        <div class="text-h6">Second dialog</div>
+                      </q-card-section>
+                      <q-card-section class="row items-center q-gutter-sm">
+                        <q-btn
+                          v-close-popup="2"
+                          label="Close both dialogs"
+                          color="accent"
+                        />
+                        <q-btn
+                          v-close-popup
+                          label="Close this dialog"
+                          color="accent"
+                        />
+                      </q-card-section>
+                    </q-card>
+                  </q-dialog>
+                </q-card-section>
+              </q-card>
+            </q-dialog>
           </div>
         </div>
 
@@ -127,21 +162,26 @@
 
             <div class="flex flex-col">
               <p class="text-[18px] font-bold text-element-purple">OIKOS</p>
-              <a class="text-[16px] text-element-purpink">About Us</a>
-              <a class="text-[16px] text-element-purpink">Projects</a>
-            </div>
-
-            <div class="flex flex-col">
-              <p class="text-[18px] font-bold text-element-purple">ACCOUNT</p>
-              <a class="text-[16px] text-element-purpink">Profile</a>
-              <a class="text-[16px] text-element-purpink">Manage</a>
-              <a class="text-[16px] text-element-purpink">Log Out</a>
+              <a
+                @click="$router.push('/aboutus')"
+                class="text-[16px] text-element-purpink cursor-pointer"
+                >About Us</a
+              >
+              <a
+                @click="$router.push('/projects')"
+                class="text-[16px] text-element-purpink cursor-pointer"
+                >Projects</a
+              >
             </div>
 
             <div class="flex flex-col">
               <p class="text-[18px] font-bold text-element-purple">SUPPORT</p>
               <a class="text-[16px] text-element-purpink">Donate</a>
-              <a class="text-[16px] text-element-purpink">Volunteer</a>
+              <a
+                @click="$router.push('/volunteerpage')"
+                class="text-[16px] text-element-purpink cursor-pointer"
+                >Volunteer</a
+              >
             </div>
           </div>
           <!-- div separator -->
@@ -178,13 +218,74 @@
             </div>
 
             <div class="flex flex-col">
-              <q-btn outline rounded color="primary" class="w-[180px] mb-2"
+              <q-btn
+                outline
+                rounded
+                color="primary"
+                class="w-[180px] mb-2"
+                @click="dialog = true"
                 >FEEDBACK</q-btn
               >
               <a class="text-[14px] text-element-purpink text-right"
                 >Have something to say? <br />
                 We'd love to hear your feedback!</a
               >
+
+              <q-dialog v-model="dialog">
+                <q-card>
+                  <q-card-section class="w-[500px] h-[550px] p-5 pt-8">
+                    <div class="flex flex-col items-center">
+                      <p class="font-bold text-element-41black text-[30px]">
+                        FEEDBACK FORM
+                      </p>
+                      <p class="text-element-b39pink mt-[-10px]">
+                        Any concerns or feedback? Tell Us!
+                      </p>
+                    </div>
+                    <div class="p-10 pt-3 flex flex-col gap-2">
+                      <div class="uppercase text-[12px] text-element-b39pink">
+                        Name
+                      </div>
+                      <div class="w-[350px]">
+                        <input
+                          outlined
+                          v-model="name"
+                          class="border-[2px] border-element-b39pink rounded-[5px] px-2 py-1 w-[380px]"
+                        />
+                      </div>
+                      <div class="uppercase text-[12px] text-element-b39pink">
+                        Email Address / Phone Number
+                      </div>
+                      <div class="w-[350px]">
+                        <input
+                          outlined
+                          v-model="contact"
+                          class="border-[2px] border-element-b39pink rounded-[5px] px-2 py-1 w-[380px]"
+                        />
+                      </div>
+                      <div class="uppercase text-[12px] text-element-b39pink">
+                        Feedback:
+                      </div>
+                      <div class="w-[350px]">
+                        <textarea
+                          v-model="feedback"
+                          class="border-[2px] border-element-b39pink rounded-[5px] px-2 py-1 h-[250px] w-[380px] resize-none"
+                        />
+                      </div>
+                    </div>
+                  </q-card-section>
+                  <q-card-section
+                    class="row items-center q-gutter-sm justify-center"
+                  >
+                    <q-btn
+                      label="SUBMIT"
+                      color="primary"
+                      @click="addFeedback"
+                    />
+                    <q-btn v-close-popup label="Close" color="primary" />
+                  </q-card-section>
+                </q-card>
+              </q-dialog>
             </div>
           </div>
         </div>
@@ -197,7 +298,14 @@
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { onMounted, ref, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
-import { getFirestore, doc, getDoc } from "firebase/firestore"; // Import Firestore functions
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  addDoc,
+  collection,
+} from "firebase/firestore"; // Import Firestore functions
+import db from "src/components/firebaseInit";
 
 const router = useRouter();
 
@@ -206,6 +314,11 @@ const isAuthenticated = ref(false);
 const isOpen = ref(false);
 const userId = ref(null); // New variable to store the user ID
 const userDocument = ref(null); // To store the user's Firestore document
+const dialog = ref(false);
+const name = ref("");
+const contact = ref("");
+const feedback = ref("");
+const willconfirm = ref();
 
 onMounted(() => {
   const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -250,27 +363,25 @@ const pushToRouter = (path) => {
   isOpen.value = !isOpen.value;
   console.log(userId.value);
 };
-</script>
 
-<!-- bot is sign out lol xd -->
-<!-- <script setup>
-import { onMounted, ref } from "vue";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+const addFeedback = async () => {
+  console.log(name.value);
+  try {
+    const feedbackRef = collection(db, "feedback");
+    const newFeedback = {
+      name: name.value,
+      contact: contact.value,
+      content: feedback.value,
+    };
 
-const isLoggedIn = ref(false);
+    await addDoc(feedbackRef, newFeedback);
+    console.log("Document added successfully!");
 
-let auth;
-
-onMounted = () => {
-  auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      isLoggedIn.value = true;
-    } else {
-      isLoggedIn.value = false;
-    }
-  });
+    name.value = "";
+    contact.value = "";
+    feedback.value = "";
+  } catch (error) {
+    console.error("Error adding document: ", error);
+  }
 };
-
-const handleSignOut = () => {};
-</script> -->
+</script>

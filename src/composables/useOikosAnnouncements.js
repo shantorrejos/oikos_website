@@ -1,26 +1,15 @@
-import { ref, onUnmounted } from "vue";
 import db from "src/components/firebaseInit";
-import { collection, addDoc, onSnapshot } from "firebase/firestore";
-
-let announcements = ref([]);
-
-const fetchAnnouncements = () => {
-  const announcementsRef = collection(db, "announcements");
-  const unsubscribe = onSnapshot(announcementsRef, (querySnapshot) => {
-    announcements.value = querySnapshot.docs.map((doc) => {
-      return {
-        id: doc.id, // Document ID
-        ...doc.data(), // Document data (type, content, date, etc.)
-      };
-    });
-  });
-
-  // Add an unsubscribe handler to stop listening when the component unmounts
-  onUnmounted(unsubscribe);
-};
+import { ref, computed, watch } from "vue";
+import { useCollection, useDocument } from "vuefire";
+import { collection, doc, documentId, query, where } from "firebase/firestore";
 
 export default () => {
-  fetchAnnouncements(); // Call the fetchAnnouncements function to populate announcements initially
+  const announcementRef = useCollection(collection(db, "announcements"));
+
+  const announcements = computed(() => {
+    if (!announcementRef.value) return;
+    return announcementRef.value;
+  });
 
   return {
     announcements,
