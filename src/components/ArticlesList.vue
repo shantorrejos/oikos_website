@@ -10,7 +10,7 @@
         light
         bordered
         class="bg-white-700 h-[475px] w-[285px] rounded-[30px] flex relative cursor-pointer"
-        v-for="(article, i) in randomArticles"
+        v-for="(article, i) in articles"
         :key="i"
         @click="router.push('./article/' + article.title)"
       >

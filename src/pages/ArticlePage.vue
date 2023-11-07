@@ -1,6 +1,6 @@
 <template>
   <div
-    class="my-[10px] mx-auto bg-element-purpink w-[150px] rounded-[20px] px-2 py-1 cursor-pointer"
+    class="my-[10px] mx-auto bg-element-purpink w-[150px] rounded-[20px] px-2 py-1 mt-10 cursor-pointer"
     @click="router.push('/project/' + articleProject.name)"
   >
     <p class="text-[14px] text-white font-bold text-center">Source Project</p>
