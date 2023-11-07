@@ -84,8 +84,8 @@
                     @click="router.push('/project/' + project.name)"
                     flat
                     rounded
-                    class="bg-element-purpink text-white font-bold text-[12px] px-4 w-fit"
-                    >VIEW
+                    class="bg-element-purpink text-white font-bold text-[10px] px-4 w-fit"
+                    >VIEW PROJECT
                   </q-btn>
                 </div>
 

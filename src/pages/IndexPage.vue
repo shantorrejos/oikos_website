@@ -10,7 +10,12 @@
 
     <!-- Engage section -->
     <div class="flex items-center justify-center gap-[40px] m-[50px] mt-0">
-      <img v-bind:src="engage" class="relative h-[400px] w-auto" />
+      <div class="relative">
+        <img v-bind:src="engage" class="relative h-[400px] w-auto" />
+        <div
+          class="bg-element-b39pink h-[400px] w-full absolute top-0 opacity-50"
+        ></div>
+      </div>
 
       <div class="max-w-[400px]">
         <div align="center" class="flex flex-col items-center">
@@ -30,6 +35,7 @@
             >DONATE</q-btn
           >
           <q-btn
+            @click="$router.push('/volunteerpage')"
             flat
             rounded
             class="bg-element-purpink text-white font-bold text-[17px] px-12 w-48"

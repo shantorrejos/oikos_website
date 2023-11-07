@@ -1,5 +1,5 @@
 <template>
-  <div align="center" class="relative m-0 p-0">
+  <div align="center" class="relative mx-auto max-w-fit">
     <q-carousel
       animated
       ref="slideRef"
@@ -25,7 +25,7 @@
 
           <div class="flex text-left w-[550px] flex-col justify-center">
             <p
-              class="text-[50px] font-bold text-element-b39pink leading-none w-[400px] uppercase mb-[20px]"
+              class="text-[50px] font-bold text-element-purple leading-none w-[400px] uppercase mb-[20px]"
             >
               {{ item?.title ? item?.title : item?.name }}
             </p>
@@ -90,6 +90,9 @@
         </q-carousel-control>
       </template>
     </q-carousel>
+    <div
+      class="w-[600px] h-[330px] bg-element-b39pink absolute top-0 opacity-50"
+    ></div>
   </div>
 </template>
 

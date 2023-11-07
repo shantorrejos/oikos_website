@@ -19,7 +19,9 @@
         :img-src="featuredPhoto"
       />
     </q-carousel>
-
+    <div
+      class="bg-element-b39pink w-[1200px] h-[370px] absolute top-0 opacity-50"
+    ></div>
     <!-- textoverlay for announcement -->
     <div class="absolute w-[417px] top-5 left-10">
       <p class="text-[45px] text-left font-bold text-white uppercase">

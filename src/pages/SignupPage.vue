@@ -23,6 +23,7 @@
     ></q-input>
     <q-input
       outlined
+      type="password"
       v-model="password"
       label="PASSWORD"
       class="w-[550px] m-3"
@@ -95,13 +96,12 @@ const register = async () => {
       followedProjects: [],
       volunteeredProjects: [],
       location: "",
-      profilePhoto: "",
+      profilePhoto:
+        "https://i.pinimg.com/474x/ed/54/3b/ed543b461c96fb73519edf7ac8718f39.jpg",
     };
 
     const userProfileRef = doc(usersCollection, user.uid);
     await setDoc(userProfileRef, userProfile);
-
-    alert("Username is already in use. Please choose another one.");
 
     router.push("/");
   } catch (error) {

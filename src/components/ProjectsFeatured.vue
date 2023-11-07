@@ -1,6 +1,12 @@
 <template>
   <div class="mb-[60px] relative" v-if="current">
-    <img :src="current.photo" class="w-[100vw] max-h-[550px] object-cover" />
+    <div class="relative">
+      <img :src="current.photo" class="w-[100vw] max-h-[550px] object-cover" />
+      <div
+        class="absolute bg-element-b39pink w-[100vw] h-[550px] top-0 opacity-50"
+      ></div>
+    </div>
+
     <div
       class="absolute top-5 left-10 font-bold uppercase text-white text-[30px]"
     >

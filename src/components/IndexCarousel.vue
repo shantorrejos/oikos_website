@@ -3,7 +3,6 @@
     <q-carousel
       animated
       v-model="slideMain"
-      arrows
       infinite
       :autoplay="3000"
       class="p-0 max-w-full h-[700px] relative"
@@ -16,6 +15,9 @@
       >
       </q-carousel-slide>
     </q-carousel>
+    <div
+      class="bg-element-purpink w-full h-[700px] absolute top-0 opacity-70 mr-2"
+    ></div>
     <p
       class="absolute bottom-20 right-10 text-white p-4 text-right font-bold text-header leading-none"
     >
